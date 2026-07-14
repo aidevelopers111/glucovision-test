@@ -25,61 +25,62 @@ if "username" not in st.session_state:
 if "account_type" not in st.session_state:
     st.session_state.account_type = "free"
 if "users" not in st.session_state:
-    st.session_state.users = {
-        "admin": {"password": "1234", "account_type": "premium"}
-    }
+    st.session_state.users = {}
 
-def login_ui():
-    st.subheader("Login")
-    username = st.text_input("Username", key="login_username").strip()
-    password = st.text_input("Password", type="password", key="login_password")
-
-    if st.button("Login"):
-        if username in st.session_state.users:
-            user = st.session_state.users[username]
-            if user["password"] == password:
-                st.session_state.logged_in = True
-                st.session_state.username = username
-                st.session_state.account_type = user["account_type"]
-                st.success(f"Welcome back, {username} ({user['account_type']})")
-                st.rerun()
-            else:
-                st.error("Wrong password")
-        else:
-            st.error("Username not found")
+def normalize_name(x):
+    return x.strip().lower()
 
 def signup_ui():
     st.subheader("Sign Up")
-    new_username = st.text_input("Choose Username", key="signup_username").strip()
+    new_username = st.text_input("Choose Username", key="signup_username")
     new_password = st.text_input("Choose Password", type="password", key="signup_password")
     premium = st.checkbox("Subscribe to Premium")
 
     if st.button("Create Account"):
-        if not new_username or not new_password:
+        uname = normalize_name(new_username)
+        if not uname or not new_password:
             st.error("Please fill all fields")
             return
-        if new_username in st.session_state.users:
+        if uname in st.session_state.users:
             st.error("Username already exists")
             return
 
-        st.session_state.users[new_username] = {
+        st.session_state.users[uname] = {
+            "display_name": new_username.strip(),
             "password": new_password,
             "account_type": "premium" if premium else "free"
         }
         st.session_state.logged_in = True
-        st.session_state.username = new_username
+        st.session_state.username = uname
         st.session_state.account_type = "premium" if premium else "free"
-        st.success(f"Account created: {st.session_state.account_type.title()}")
+        st.success("Account created")
         st.rerun()
+
+def login_ui():
+    st.subheader("Login")
+    username = st.text_input("Username", key="login_username")
+    password = st.text_input("Password", type="password", key="login_password")
+
+    if st.button("Login"):
+        uname = normalize_name(username)
+        if uname in st.session_state.users:
+            user = st.session_state.users[uname]
+            if user["password"] == password:
+                st.session_state.logged_in = True
+                st.session_state.username = uname
+                st.session_state.account_type = user["account_type"]
+                st.success(f"Welcome back, {user['display_name']}")
+                st.rerun()
+            else:
+                st.error("Wrong password")
+        else:
+            st.error("Username is invalid")
 if not st.session_state.logged_in:
     tab1, tab2 = st.tabs(["Login", "Sign Up"])
-
     with tab1:
         login_ui()
-
     with tab2:
         signup_ui()
-
     st.stop()
 # ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
 st.set_page_config(
