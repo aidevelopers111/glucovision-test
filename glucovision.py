@@ -68,6 +68,13 @@ def signup_ui():
         st.session_state.account_type = "premium" if premium else "free"
         st.success(f"Account created: {st.session_state.account_type.title()}")
         st.rerun()
+        if not st.session_state.logged_in:
+    tab1, tab2 = st.tabs(["Login", "Sign Up"])
+    with tab1:
+        login_ui()
+    with tab2:
+        signup_ui()
+    st.stop()
 # ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="GlucoVision AI",
