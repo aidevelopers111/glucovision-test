@@ -31,23 +31,26 @@ if "users" not in st.session_state:
 
 def login_ui():
     st.subheader("Login")
-    username = st.text_input("Username", key="login_username")
+    username = st.text_input("Username", key="login_username").strip()
     password = st.text_input("Password", type="password", key="login_password")
 
     if st.button("Login"):
-        user = st.session_state.users.get(username)
-        if user and user["password"] == password:
-            st.session_state.logged_in = True
-            st.session_state.username = username
-            st.session_state.account_type = user["account_type"]
-            st.success(f"Welcome back, {username} ({user['account_type']})")
-            st.rerun()
+        if username in st.session_state.users:
+            user = st.session_state.users[username]
+            if user["password"] == password:
+                st.session_state.logged_in = True
+                st.session_state.username = username
+                st.session_state.account_type = user["account_type"]
+                st.success(f"Welcome back, {username} ({user['account_type']})")
+                st.rerun()
+            else:
+                st.error("Wrong password")
         else:
-            st.error("Invalid username or password")
+            st.error("Username not found")
 
 def signup_ui():
     st.subheader("Sign Up")
-    new_username = st.text_input("Choose Username", key="signup_username")
+    new_username = st.text_input("Choose Username", key="signup_username").strip()
     new_password = st.text_input("Choose Password", type="password", key="signup_password")
     premium = st.checkbox("Subscribe to Premium")
 
@@ -67,8 +70,7 @@ def signup_ui():
         st.session_state.username = new_username
         st.session_state.account_type = "premium" if premium else "free"
         st.success(f"Account created: {st.session_state.account_type.title()}")
-        st.rerun()
-if not st.session_state.logged_in:
+        st.rerun()state.logged_in:
     tab1, tab2 = st.tabs(["Login", "Sign Up"])
 
     with tab1:
