@@ -828,6 +828,100 @@ FOOD_DB = {
 "Navratan Korma (1 bowl)": {"calories": 290.0, "carbs": 22.0, "protein": 7.0, "fat": 19.0},
 "Veg Kolhapuri (1 bowl)": {"calories": 210.0, "carbs": 18.0, "protein": 6.0, "fat": 13.0},
 "Chole Bhature (1 plate)": {"calories": 620.0, "carbs": 72.0, "protein": 16.0, "fat": 30.0}
+    "Maggi Noodles (1 packet (70 g))": {"calories": 320.0, "carbs": 45.0, "protein": 7.0, "fat": 13.0},
+"Maggi Masala Noodles (prepared) (1 bowl)": {"calories": 350.0, "carbs": 50.0, "protein": 8.0, "fat": 14.0},
+"Maggi Vegetable Atta Noodles (1 packet)": {"calories": 310.0, "carbs": 48.0, "protein": 8.0, "fat": 10.0},
+"Yippee Noodles (1 packet)": {"calories": 335.0, "carbs": 49.0, "protein": 7.0, "fat": 13.0},
+"Top Ramen Curry Noodles (1 packet)": {"calories": 340.0, "carbs": 49.0, "protein": 7.0, "fat": 14.0},
+
+"Bikaneri Bhujia (100 g)": {"calories": 560.0, "carbs": 48.0, "protein": 15.0, "fat": 34.0},
+"Aloo Bhujia (100 g)": {"calories": 540.0, "carbs": 52.0, "protein": 10.0, "fat": 33.0},
+"Navratan Mixture (100 g)": {"calories": 545.0, "carbs": 46.0, "protein": 11.0, "fat": 36.0},
+"Bombay Mix (100 g)": {"calories": 540.0, "carbs": 48.0, "protein": 11.0, "fat": 35.0},
+"Chanachur (100 g)": {"calories": 535.0, "carbs": 46.0, "protein": 12.0, "fat": 35.0},
+"Corn Mixture (100 g)": {"calories": 510.0, "carbs": 56.0, "protein": 9.0, "fat": 27.0},
+"Salted Namkeen (100 g)": {"calories": 520.0, "carbs": 52.0, "protein": 10.0, "fat": 30.0},
+"Sev (100 g)": {"calories": 570.0, "carbs": 45.0, "protein": 14.0, "fat": 38.0},
+"Ratlami Sev (100 g)": {"calories": 565.0, "carbs": 44.0, "protein": 13.0, "fat": 39.0},
+"Masala Peanuts (100 g)": {"calories": 610.0, "carbs": 20.0, "protein": 23.0, "fat": 50.0},
+
+"Kurkure Masala Munch (100 g)": {"calories": 545.0, "carbs": 57.0, "protein": 6.0, "fat": 33.0},
+"Kurkure Green Chutney (100 g)": {"calories": 540.0, "carbs": 58.0, "protein": 6.0, "fat": 32.0},
+"Lay's Classic Chips (100 g)": {"calories": 536.0, "carbs": 53.0, "protein": 7.0, "fat": 35.0},
+"Lay's American Style Cream & Onion (100 g)": {"calories": 540.0, "carbs": 54.0, "protein": 6.0, "fat": 35.0},
+"Lay's Magic Masala (100 g)": {"calories": 540.0, "carbs": 54.0, "protein": 6.0, "fat": 35.0},
+"Bingo Mad Angles (100 g)": {"calories": 530.0, "carbs": 58.0, "protein": 6.0, "fat": 31.0},
+"Doritos Nacho Cheese (100 g)": {"calories": 500.0, "carbs": 63.0, "protein": 7.0, "fat": 25.0},
+"Pringles Original (100 g)": {"calories": 536.0, "carbs": 53.0, "protein": 5.0, "fat": 35.0},
+
+"Masala Corn Cup (1 cup)": {"calories": 180.0, "carbs": 34.0, "protein": 6.0, "fat": 2.0},
+"Cheese Corn Cup (1 cup)": {"calories": 260.0, "carbs": 30.0, "protein": 9.0, "fat": 12.0},
+"Sweet Corn Chaat (1 bowl)": {"calories": 190.0, "carbs": 36.0, "protein": 6.0, "fat": 2.0},
+
+"Veg Maggi with Cheese (1 bowl)": {"calories": 430.0, "carbs": 52.0, "protein": 13.0, "fat": 19.0},
+"Veg Maggi with Paneer (1 bowl)": {"calories": 450.0, "carbs": 50.0, "protein": 18.0, "fat": 20.0},
+"Veg Cheese Maggi (1 bowl)": {"calories": 440.0, "carbs": 51.0, "protein": 13.0, "fat": 20.0},
+
+"Bread Pakora (1 piece)": {"calories": 260.0, "carbs": 27.0, "protein": 7.0, "fat": 14.0},
+"Cheese Bread Pakora (1 piece)": {"calories": 340.0, "carbs": 28.0, "protein": 12.0, "fat": 21.0},
+"Veg Puff (1 piece)": {"calories": 310.0, "carbs": 30.0, "protein": 5.0, "fat": 19.0},
+"Paneer Puff (1 piece)": {"calories": 350.0, "carbs": 29.0, "protein": 10.0, "fat": 22.0},
+"Cheese Puff (1 piece)": {"calories": 360.0, "carbs": 28.0, "protein": 10.0, "fat": 24.0},
+
+"Veg Roll (1 roll)": {"calories": 330.0, "carbs": 40.0, "protein": 8.0, "fat": 15.0},
+"Paneer Kathi Roll (1 roll)": {"calories": 470.0, "carbs": 42.0, "protein": 19.0, "fat": 24.0},
+"Cheese Roll (1 roll)": {"calories": 420.0, "carbs": 38.0, "protein": 14.0, "fat": 22.0},
+
+"Veg Frankie (1 piece)": {"calories": 340.0, "carbs": 41.0, "protein": 9.0, "fat": 15.0},
+"Paneer Frankie (1 piece)": {"calories": 430.0, "carbs": 39.0, "protein": 18.0, "fat": 22.0},
+
+"Cheese Dosa (1 large)": {"calories": 310.0, "carbs": 34.0, "protein": 8.0, "fat": 16.0},
+"Masala Dosa (1 large)": {"calories": 387.0, "carbs": 48.0, "protein": 8.0, "fat": 18.0},
+"Mysore Masala Dosa (1 large)": {"calories": 430.0, "carbs": 50.0, "protein": 9.0, "fat": 20.0},
+"Rava Dosa (1 large)": {"calories": 260.0, "carbs": 32.0, "protein": 5.0, "fat": 11.0},
+
+"Cheese Uttapam (1 piece)": {"calories": 290.0, "carbs": 30.0, "protein": 9.0, "fat": 14.0},
+"Onion Uttapam (1 piece)": {"calories": 190.0, "carbs": 28.0, "protein": 5.0, "fat": 6.0},
+
+"Cheese Pav Bhaji (1 plate)": {"calories": 520.0, "carbs": 55.0, "protein": 12.0, "fat": 28.0},
+"Extra Butter Pav Bhaji (1 plate)": {"calories": 610.0, "carbs": 56.0, "protein": 10.0, "fat": 36.0},
+
+"Cheese Vada Pav (1 piece)": {"calories": 380.0, "carbs": 42.0, "protein": 10.0, "fat": 19.0},
+"Jumbo Vada Pav (1 piece)": {"calories": 360.0, "carbs": 48.0, "protein": 8.0, "fat": 15.0},
+
+"Cheese Dabeli (1 piece)": {"calories": 360.0, "carbs": 45.0, "protein": 9.0, "fat": 16.0},
+"Dabeli (1 piece)": {"calories": 290.0, "carbs": 42.0, "protein": 6.0, "fat": 11.0},
+
+"Veg Pizza Puff (1 piece)": {"calories": 290.0, "carbs": 28.0, "protein": 7.0, "fat": 17.0},
+"Paneer Pizza (Mini)": {"calories": 520.0, "carbs": 52.0, "protein": 20.0, "fat": 26.0},
+
+"Garlic Naan with Cheese (1 piece)": {"calories": 360.0, "carbs": 46.0, "protein": 10.0, "fat": 15.0},
+"Butter Naan (1 piece)": {"calories": 310.0, "carbs": 45.0, "protein": 8.0, "fat": 10.0},
+
+"Cheese Momos (6 pieces)": {"calories": 360.0, "carbs": 34.0, "protein": 13.0, "fat": 18.0},
+"Tandoori Momos (Veg) (6 pieces)": {"calories": 300.0, "carbs": 31.0, "protein": 10.0, "fat": 15.0},
+
+"Veg Sizzler (1 serving)": {"calories": 540.0, "carbs": 55.0, "protein": 16.0, "fat": 26.0},
+"Paneer Sizzler (1 serving)": {"calories": 620.0, "carbs": 50.0, "protein": 24.0, "fat": 35.0},
+
+"Chocolate Pastry (1 piece)": {"calories": 290.0, "carbs": 35.0, "protein": 4.0, "fat": 15.0},
+"Pineapple Pastry (1 piece)": {"calories": 260.0, "carbs": 34.0, "protein": 4.0, "fat": 12.0},
+"Black Forest Pastry (1 piece)": {"calories": 280.0, "carbs": 36.0, "protein": 4.0, "fat": 13.0},
+"Red Velvet Pastry (1 piece)": {"calories": 310.0, "carbs": 38.0, "protein": 4.0, "fat": 16.0},
+
+"Chocolate Croissant (1 piece)": {"calories": 410.0, "carbs": 45.0, "protein": 8.0, "fat": 22.0},
+"Butter Croissant (1 piece)": {"calories": 270.0, "carbs": 31.0, "protein": 5.0, "fat": 14.0},
+
+"Veg Pizza Sandwich": {"calories": 390.0, "carbs": 42.0, "protein": 14.0, "fat": 18.0},
+"Cheese Toast (2 slices)": {"calories": 320.0, "carbs": 28.0, "protein": 12.0, "fat": 18.0},
+"Garlic Toast (2 slices)": {"calories": 220.0, "carbs": 26.0, "protein": 5.0, "fat": 10.0},
+
+"Chocolate Waffle (1 piece)": {"calories": 420.0, "carbs": 52.0, "protein": 8.0, "fat": 20.0},
+"Belgian Waffle (1 piece)": {"calories": 390.0, "carbs": 48.0, "protein": 7.0, "fat": 19.0},
+"Pancakes with Maple Syrup (2 pancakes)": {"calories": 350.0, "carbs": 58.0, "protein": 8.0, "fat": 10.0},
+
+"Veg Sushi Roll (8 pieces)": {"calories": 260.0, "carbs": 48.0, "protein": 6.0, "fat": 4.0},
+"Avocado Sushi Roll (8 pieces)": {"calories": 290.0, "carbs": 44.0, "protein": 5.0, "fat": 10.0}
 }
 INSULIN_TYPES = [
     "No Insulin",
