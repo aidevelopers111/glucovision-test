@@ -921,7 +921,83 @@ FOOD_DB = {
 "Pancakes with Maple Syrup (2 pancakes)": {"calories": 350.0, "carbs": 58.0, "protein": 8.0, "fat": 10.0},
 
 "Veg Sushi Roll (8 pieces)": {"calories": 260.0, "carbs": 48.0, "protein": 6.0, "fat": 4.0},
-"Avocado Sushi Roll (8 pieces)": {"calories": 290.0, "carbs": 44.0, "protein": 5.0, "fat": 10.0}
+"Avocado Sushi Roll (8 pieces)": {"calories": 290.0, "carbs": 44.0, "protein": 5.0, "fat": 10.0},
+"White Bread (1 slice (30 g))": {"calories": 80.0, "carbs": 15.0, "protein": 2.7, "fat": 1.0},
+"Brown Bread (1 slice (30 g))": {"calories": 74.0, "carbs": 13.0, "protein": 3.5, "fat": 1.1},
+"Whole Wheat Bread (1 slice (30 g))": {"calories": 75.0, "carbs": 13.0, "protein": 3.8, "fat": 1.0},
+"Multigrain Bread (1 slice (35 g))": {"calories": 85.0, "carbs": 15.0, "protein": 4.0, "fat": 1.4},
+"Garlic Bread (1 slice)": {"calories": 140.0, "carbs": 17.0, "protein": 3.0, "fat": 7.0},
+"Bread Toast (2 slices)": {"calories": 160.0, "carbs": 30.0, "protein": 5.4, "fat": 2.0},
+"Butter Toast (2 slices)": {"calories": 230.0, "carbs": 30.0, "protein": 5.4, "fat": 10.0},
+"Jam Toast (2 slices)": {"calories": 220.0, "carbs": 40.0, "protein": 5.0, "fat": 3.0},
+"Peanut Butter Toast (2 slices)": {"calories": 300.0, "carbs": 32.0, "protein": 11.0, "fat": 15.0},
+"Cheese Toast (2 slices)": {"calories": 290.0, "carbs": 29.0, "protein": 12.0, "fat": 14.0},
+
+"Bread Omelette (Veg Style) (2 slices)": {"calories": 250.0, "carbs": 28.0, "protein": 11.0, "fat": 10.0},
+"Bread Butter (2 slices)": {"calories": 235.0, "carbs": 30.0, "protein": 5.0, "fat": 10.0},
+"Bread Jam (2 slices)": {"calories": 220.0, "carbs": 42.0, "protein": 5.0, "fat": 2.0},
+"Bread Cheese (2 slices)": {"calories": 280.0, "carbs": 28.0, "protein": 12.0, "fat": 14.0},
+"French Toast (2 slices)": {"calories": 310.0, "carbs": 32.0, "protein": 11.0, "fat": 15.0},
+
+"Plain Bun (1 bun)": {"calories": 150.0, "carbs": 28.0, "protein": 5.0, "fat": 2.0},
+"Pav (1 piece)": {"calories": 90.0, "carbs": 18.0, "protein": 3.0, "fat": 1.0},
+"Burger Bun (1 bun)": {"calories": 120.0, "carbs": 22.0, "protein": 4.0, "fat": 2.0},
+"Hot Dog Bun (1 bun)": {"calories": 130.0, "carbs": 24.0, "protein": 4.0, "fat": 2.0},
+"Bagel (1 medium)": {"calories": 250.0, "carbs": 49.0, "protein": 10.0, "fat": 1.5},
+
+"Croissant (1 piece)": {"calories": 231.0, "carbs": 26.0, "protein": 5.0, "fat": 12.0},
+"Muffin (Plain) (1 medium)": {"calories": 265.0, "carbs": 38.0, "protein": 5.0, "fat": 10.0},
+"Rusk (2 pieces)": {"calories": 110.0, "carbs": 20.0, "protein": 3.0, "fat": 2.0},
+"Khari Biscuit (2 pieces)": {"calories": 120.0, "carbs": 12.0, "protein": 2.0, "fat": 7.0},
+"Tea Cake (1 slice)": {"calories": 180.0, "carbs": 28.0, "protein": 3.0, "fat": 7.0},
+
+"Boiled Sweet Corn (1 cup)": {"calories": 132.0, "carbs": 29.0, "protein": 5.0, "fat": 2.0},
+"Roasted Corn (1 medium)": {"calories": 110.0, "carbs": 24.0, "protein": 4.0, "fat": 1.5},
+"Butter Corn (1 cup)": {"calories": 180.0, "carbs": 28.0, "protein": 5.0, "fat": 6.0},
+"Boiled Chickpeas (100 g)": {"calories": 164.0, "carbs": 27.0, "protein": 9.0, "fat": 2.6},
+"Boiled Black Chana (100 g)": {"calories": 164.0, "carbs": 27.0, "protein": 9.0, "fat": 2.6},
+
+"Boiled Corn Chaat (1 bowl)": {"calories": 170.0, "carbs": 31.0, "protein": 6.0, "fat": 3.0},
+"Fruit Chaat (1 bowl)": {"calories": 120.0, "carbs": 30.0, "protein": 2.0, "fat": 0.5},
+"Vegetable Salad (1 bowl)": {"calories": 60.0, "carbs": 12.0, "protein": 2.5, "fat": 0.5},
+"Greek Salad (1 bowl)": {"calories": 180.0, "carbs": 10.0, "protein": 6.0, "fat": 13.0},
+"Caesar Salad (Veg) (1 bowl)": {"calories": 220.0, "carbs": 15.0, "protein": 7.0, "fat": 15.0},
+
+"Plain Rice Cakes (2 cakes)": {"calories": 70.0, "carbs": 15.0, "protein": 1.5, "fat": 0.5},
+"Rice Krispies (30 g)": {"calories": 116.0, "carbs": 26.0, "protein": 2.0, "fat": 0.4},
+"Weetabix (2 biscuits)": {"calories": 136.0, "carbs": 26.0, "protein": 4.8, "fat": 0.8},
+"Porridge (1 bowl)": {"calories": 180.0, "carbs": 30.0, "protein": 7.0, "fat": 4.0},
+"Semolina Porridge (1 bowl)": {"calories": 210.0, "carbs": 35.0, "protein": 6.0, "fat": 5.0},
+
+"Plain Pasta (cooked) (100 g)": {"calories": 157.0, "carbs": 31.0, "protein": 5.8, "fat": 0.9},
+"Macaroni (cooked) (100 g)": {"calories": 158.0, "carbs": 31.0, "protein": 5.8, "fat": 1.0},
+"Spaghetti (cooked) (100 g)": {"calories": 158.0, "carbs": 31.0, "protein": 5.8, "fat": 0.9},
+"Rice Noodles (cooked) (100 g)": {"calories": 109.0, "carbs": 25.0, "protein": 1.8, "fat": 0.2},
+"Whole Wheat Pasta (100 g cooked)": {"calories": 149.0, "carbs": 30.0, "protein": 6.0, "fat": 0.9},
+
+"Plain Yogurt (100 g)": {"calories": 61.0, "carbs": 4.7, "protein": 3.5, "fat": 3.3},
+"Low Fat Yogurt (100 g)": {"calories": 43.0, "carbs": 4.7, "protein": 4.0, "fat": 1.0},
+"Flavored Yogurt (100 g)": {"calories": 95.0, "carbs": 14.0, "protein": 3.5, "fat": 2.0},
+"Vanilla Yogurt (100 g)": {"calories": 97.0, "carbs": 15.0, "protein": 3.4, "fat": 2.0},
+"Frozen Yogurt (100 g)": {"calories": 127.0, "carbs": 22.0, "protein": 3.5, "fat": 3.0},
+
+"Cream Cheese (30 g)": {"calories": 102.0, "carbs": 1.6, "protein": 2.0, "fat": 10.0},
+"Cottage Cheese (100 g)": {"calories": 98.0, "carbs": 3.4, "protein": 11.0, "fat": 4.3},
+"Processed Cheese Slice (1 slice)": {"calories": 65.0, "carbs": 1.0, "protein": 4.0, "fat": 5.0},
+"Cheese Cube (20 g)": {"calories": 80.0, "carbs": 0.5, "protein": 5.0, "fat": 6.5},
+"Cheese Spread (20 g)": {"calories": 70.0, "carbs": 1.0, "protein": 2.0, "fat": 6.0},
+
+"Boiled Potato (1 medium)": {"calories": 161.0, "carbs": 37.0, "protein": 4.0, "fat": 0.2},
+"Mashed Potato (100 g)": {"calories": 110.0, "carbs": 17.0, "protein": 2.0, "fat": 4.0},
+"Baked Potato (1 medium)": {"calories": 161.0, "carbs": 37.0, "protein": 4.0, "fat": 0.2},
+"Sweet Potato Fries (100 g)": {"calories": 250.0, "carbs": 33.0, "protein": 2.5, "fat": 11.0},
+"Hash Browns (100 g)": {"calories": 326.0, "carbs": 37.0, "protein": 3.0, "fat": 18.0},
+
+"Boiled Pasta with Butter (1 bowl)": {"calories": 280.0, "carbs": 38.0, "protein": 7.0, "fat": 11.0},
+"Vegetable Soup (1 bowl)": {"calories": 90.0, "carbs": 15.0, "protein": 3.0, "fat": 2.0},
+"Tomato Soup (1 bowl)": {"calories": 80.0, "carbs": 14.0, "protein": 2.0, "fat": 2.0},
+"Sweet Corn Soup (1 bowl)": {"calories": 140.0, "carbs": 25.0, "protein": 4.0, "fat": 2.0},
+"Hot & Sour Soup (Veg) (1 bowl)": {"calories": 95.0, "carbs": 15.0, "protein": 3.0, "fat": 2.0}
 }
 INSULIN_TYPES = [
     "No Insulin",
