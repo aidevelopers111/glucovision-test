@@ -14,6 +14,58 @@ from datetime import datetime, timedelta
 import io
 import math
 
+import streamlit as st
+
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "username" not in st.session_state:
+    st.session_state.username = ""
+if "account_type" not in st.session_state:
+    st.session_state.account_type = "free"
+if "users" not in st.session_state:
+    st.session_state.users = {
+        "admin": {"password": "1234", "account_type": "premium"}
+    }
+
+def login_ui():
+    st.subheader("Login")
+    username = st.text_input("Username", key="login_username")
+    password = st.text_input("Password", type="password", key="login_password")
+
+    if st.button("Login"):
+        user = st.session_state.users.get(username)
+        if user and user["password"] == password:
+            st.session_state.logged_in = True
+            st.session_state.username = username
+            st.session_state.account_type = user["account_type"]
+            st.success(f"Welcome back, {username} ({user['account_type']})")
+            st.rerun()
+        else:
+            st.error("Invalid username or password")
+
+def signup_ui():
+    st.subheader("Sign Up")
+    new_username = st.text_input("Choose Username", key="signup_username")
+    new_password = st.text_input("Choose Password", type="password", key="signup_password")
+    premium = st.checkbox("Subscribe to Premium")
+
+    if st.button("Create Account"):
+        if not new_username or not new_password:
+            st.error("Please fill all fields")
+            return
+        if new_username in st.session_state.users:
+            st.error("Username already exists")
+            return
+
+        st.session_state.users[new_username] = {
+            "password": new_password,
+            "account_type": "premium" if premium else "free"
+        }
+        st.session_state.logged_in = True
+        st.session_state.username = new_username
+        st.session_state.account_type = "premium" if premium else "free"
+        st.success(f"Account created: {st.session_state.account_type.title()}")
+        st.rerun()
 # ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
 st.set_page_config(
     page_title="GlucoVision AI",
