@@ -71,7 +71,7 @@ def signup_ui():
         st.session_state.account_type = "premium" if premium else "free"
         st.success(f"Account created: {st.session_state.account_type.title()}")
         st.rerun()
-        state.logged_in:
+if not st.session_state.logged_in:
     tab1, tab2 = st.tabs(["Login", "Sign Up"])
 
     with tab1:
