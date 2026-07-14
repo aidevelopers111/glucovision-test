@@ -827,7 +827,7 @@ FOOD_DB = {
 "Malai Kofta (1 bowl)": {"calories": 370.0, "carbs": 24.0, "protein": 9.0, "fat": 27.0},
 "Navratan Korma (1 bowl)": {"calories": 290.0, "carbs": 22.0, "protein": 7.0, "fat": 19.0},
 "Veg Kolhapuri (1 bowl)": {"calories": 210.0, "carbs": 18.0, "protein": 6.0, "fat": 13.0},
-"Chole Bhature (1 plate)": {"calories": 620.0, "carbs": 72.0, "protein": 16.0, "fat": 30.0}
+"Chole Bhature (1 plate)": {"calories": 620.0, "carbs": 72.0, "protein": 16.0, "fat": 30.0},
     "Maggi Noodles (1 packet (70 g))": {"calories": 320.0, "carbs": 45.0, "protein": 7.0, "fat": 13.0},
 "Maggi Masala Noodles (prepared) (1 bowl)": {"calories": 350.0, "carbs": 50.0, "protein": 8.0, "fat": 14.0},
 "Maggi Vegetable Atta Noodles (1 packet)": {"calories": 310.0, "carbs": 48.0, "protein": 8.0, "fat": 10.0},
