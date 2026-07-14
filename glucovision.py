@@ -1267,49 +1267,163 @@ def get_recommendations(diabetes_type, glucose, predicted_peak, bmi, bmi_cat, ca
     """Generate personalised AI recommendations."""
     recs = []
 
-    # Glucose-based
+def get_recommendations(diabetes_type, glucose, predicted_peak, bmi, bmi_cat, carbs):
+    """
+    Generate personalized metabolic health recommendations.
+    Returns the 7 highest-priority recommendations.
+    """
+
+    recommendations = []
+
+    def add(priority, message):
+        recommendations.append((priority, message))
+
+    # -------------------------
+    # 1. Current Glucose Status
+    # -------------------------
     if glucose < 70:
-        recs.append("⚠️ Current glucose appears low (hypoglycemia range). Consider consuming fast-acting carbohydrates like juice or glucose tablets immediately.")
+        add(1,
+            "🔴 Your blood glucose is very low. Consume 15–20 g of fast-acting carbohydrates (such as glucose tablets or fruit juice) and recheck after 15 minutes.")
+
+    elif 70 <= glucose < 80:
+        add(2,
+            "🟠 Your glucose is slightly below the target range. Consider a light carbohydrate snack if your next meal is more than an hour away.")
+
+    elif 80 <= glucose <= 140:
+        add(5,
+            "🟢 Your current blood glucose is within the healthy target range. Keep following your current meal and activity habits.")
+
+    elif 140 < glucose <= 180:
+        add(2,
+            "🟠 Your glucose is mildly elevated. Drinking water and taking a short walk after eating may help improve glucose control.")
+
     elif glucose > 180:
-        recs.append("🔴 Current glucose is elevated. Ensure adequate hydration and consult your healthcare provider about medication adjustments.")
-    elif 80 <= glucose <= 120:
-        recs.append("✅ Your current glucose reading is within a healthy range. Maintain this with consistent meal timing and activity.")
+        add(1,
+            "🔴 Your blood glucose is above the recommended range. Avoid sugary foods for the next few hours and monitor your glucose closely.")
 
-    # Predicted peak
-    if predicted_peak > 200:
-        recs.append("📈 Glucose is predicted to rise significantly. A 15–20 minute post-meal walk can reduce peak glucose by up to 30%.")
-    elif predicted_peak > 160:
-        recs.append("📊 Moderate glucose rise predicted. Monitor closely and consider light physical activity after eating.")
+    # -------------------------
+    # 2. Predicted Glucose Peak
+    # -------------------------
+    if predicted_peak >= 250:
+        add(1,
+            "📈 A very high glucose spike is predicted after this meal. Reducing portion size and including protein or fiber can help lower future spikes.")
 
-    # Diabetes-specific
-    if diabetes_type == "Type 1 Diabetes":
-        recs.append("💉 As a Type 1 diabetic, consistent carb-counting and insulin-to-carb ratio management is essential. Discuss your I:C ratio with your endocrinologist.")
-    elif diabetes_type == "Type 2 Diabetes":
-        recs.append("🥗 For Type 2 management, reducing refined carbohydrates and increasing dietary fibre can significantly improve glucose control.")
-    elif diabetes_type == "Prediabetes":
-        recs.append("🌿 Prediabetes can often be reversed with lifestyle changes. Aim for 150 minutes of moderate exercise per week and reduce sugar intake.")
+    elif predicted_peak >= 200:
+        add(2,
+            "📈 A significant glucose rise is expected. A 15–20 minute walk after eating may reduce the glucose peak.")
+
+    elif predicted_peak >= 160:
+        add(3,
+            "📊 A moderate glucose rise is predicted. Monitor your next reading and avoid additional sugary snacks.")
+
+    elif predicted_peak < 140:
+        add(5,
+            "✅ Your predicted glucose response is stable, indicating good metabolic control for this meal.")
+
+    # -------------------------
+    # 3. Carbohydrate Intake
+    # -------------------------
+    if carbs >= 100:
+        add(1,
+            "🍚 This meal contains a very high amount of carbohydrates. Consider reducing portions or replacing refined carbs with whole grains and vegetables.")
+
+    elif carbs >= 70:
+        add(2,
+            "🍽 Your carbohydrate intake is relatively high. Pair carbohydrates with paneer, dal, yogurt, or pulses to slow glucose absorption.")
+
+    elif carbs >= 40:
+        add(4,
+            "🥗 Your carbohydrate intake is moderate. Including more vegetables can further improve blood sugar stability.")
+
     else:
-        recs.append("✅ No diabetes detected. Maintain a balanced diet and active lifestyle to prevent future risk.")
+        add(5,
+            "✅ Your carbohydrate intake is well balanced for this meal.")
 
-    # BMI-based
-    if bmi_cat == "Obese":
-        recs.append("⚖️ BMI indicates obesity, which significantly increases insulin resistance. A 5–10% weight reduction can improve glucose sensitivity meaningfully.")
+    # -------------------------
+    # 4. BMI
+    # -------------------------
+    if bmi_cat == "Underweight":
+        add(2,
+            "⚖ Your BMI is below the healthy range. Focus on nutritious calorie-dense foods and adequate protein intake.")
+
+    elif bmi_cat == "Healthy":
+        add(5,
+            "✅ Your BMI is within the healthy range. Continue maintaining your current lifestyle.")
+
     elif bmi_cat == "Overweight":
-        recs.append("⚖️ Slightly elevated BMI noted. Regular cardiovascular exercise (30 min/day) can help improve metabolic health.")
-    elif bmi_cat == "Underweight":
-        recs.append("⚖️ BMI indicates underweight status. Adequate caloric intake with balanced nutrition is important for metabolic function.")
+        add(3,
+            "⚖ Losing even 5% of body weight can improve insulin sensitivity and overall metabolic health.")
 
-    # Carb-based
-    if carbs > 80:
-        recs.append("🍽️ High carbohydrate intake detected. Consider splitting this meal into smaller portions and pairing carbs with protein and healthy fats to blunt glucose spikes.")
-    elif carbs > 50:
-        recs.append("🥦 Moderate carb load. Including non-starchy vegetables can help slow carbohydrate absorption.")
+    elif bmi_cat == "Obese":
+        add(2,
+            "⚖ Weight management can greatly improve blood sugar control. Gradual weight loss through diet and physical activity is recommended.")
 
-    # General wellness
-    recs.append("💧 Staying well-hydrated (8–10 glasses of water daily) supports kidney function and glucose regulation.")
-    recs.append("😴 Quality sleep (7–9 hours) is crucial for glucose regulation. Poor sleep is linked to increased insulin resistance.")
+    # -------------------------
+    # 5. Diabetes-specific Advice
+    # -------------------------
+    if diabetes_type == "Type 1 Diabetes":
+        add(2,
+            "💉 Continue accurate carbohydrate counting and follow your prescribed insulin-to-carbohydrate ratio.")
 
-    return recs[:7]  # Cap at 7 recommendations
+    elif diabetes_type == "Type 2 Diabetes":
+        add(2,
+            "🥦 Emphasize high-fiber foods, whole grains, legumes, and regular physical activity to improve glucose control.")
+
+    elif diabetes_type == "Prediabetes":
+        add(3,
+            "🌱 Lifestyle changes can often prevent progression to diabetes. Aim for at least 150 minutes of exercise each week.")
+
+    else:
+        add(5,
+            "💚 Continue maintaining healthy eating habits and regular exercise to reduce future diabetes risk.")
+
+    # -------------------------
+    # 6. Combined Intelligence
+    # -------------------------
+    if glucose > 180 and predicted_peak > 220:
+        add(1,
+            "🚨 Your current glucose is high and is expected to rise further. Avoid additional carbohydrates today and monitor your glucose over the next 2 hours.")
+
+    if carbs > 80 and predicted_peak > 200:
+        add(2,
+            "🥣 The carbohydrate content of this meal is likely driving the predicted glucose spike. Next time, reduce refined carbs and increase protein or fiber.")
+
+    if bmi_cat in ["Overweight", "Obese"] and diabetes_type == "Type 2 Diabetes":
+        add(2,
+            "📉 Improving body weight through gradual lifestyle changes can significantly reduce insulin resistance.")
+
+    if glucose < 140 and predicted_peak < 160 and carbs < 60:
+        add(5,
+            "🎉 Excellent metabolic profile! Your current glucose, meal composition, and predicted response are all within healthy limits.")
+
+    # -------------------------
+    # 7. General Wellness
+    # -------------------------
+    add(4,
+        "💧 Stay hydrated by drinking 2–3 liters of water throughout the day unless advised otherwise by your doctor.")
+
+    add(4,
+        "🚶 Aim for at least 30 minutes of moderate physical activity daily. Even a short walk after meals can improve glucose control.")
+
+    add(4,
+        "😴 Aim for 7–9 hours of quality sleep each night, as poor sleep can increase insulin resistance.")
+
+    # -------------------------
+    # Remove duplicate messages
+    # -------------------------
+    unique = []
+    seen = set()
+
+    for priority, msg in recommendations:
+        if msg not in seen:
+            seen.add(msg)
+            unique.append((priority, msg))
+
+    # Sort by priority
+    unique.sort(key=lambda x: x[0])
+
+    # Return top 7 recommendations
+    return [msg for _, msg in unique[:7]]
 
 
 def generate_pdf_report(
