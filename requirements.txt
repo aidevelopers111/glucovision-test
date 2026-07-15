@@ -1,7 +1,7 @@
-streamlit>=1.49
+streamlit
 pandas
 numpy
+scikit-learn
+matplotlib
 plotly
-reportlab
-google.generativeai
-json
+google-generativeai
