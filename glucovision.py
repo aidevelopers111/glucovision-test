@@ -1263,195 +1263,90 @@ def health_score(
     return round(score, 1), risk
 
 
-def get_recommendations(diabetes_type, glucose, predicted_peak, bmi, bmi_cat, carbs) -> list[str]:
-    """Generate personalised AI recommendations."""
-    recs = []
+import json
 
-def get_recommendations(diabetes_type, glucose, predicted_peak, bmi, bmi_cat, carbs):
-    """
-    Generate personalized metabolic health recommendations.
-    Returns the 7 highest-priority recommendations.
-    """
+def get_ai_recommendations(
+    age,
+    gender,
+    height,
+    weight,
+    bmi,
+    bmi_category,
+    diabetes_type,
+    current_glucose,
+    predicted_peak,
+    calories,
+    carbs,
+    protein,
+    fat
+):
 
-    recommendations = []
+    prompt = f"""
+You are an experienced endocrinologist and nutritionist.
 
-    def add(priority, message):
-        recommendations.append((priority, message))
+Analyze this patient's metabolic health.
 
-    # -------------------------
-    # 1. Current Glucose Status
-    # -------------------------
-    if glucose < 70:
-        add(1,
-            "🔴 Your blood glucose is very low. Consume 15–20 g of fast-acting carbohydrates (such as glucose tablets or fruit juice) and recheck after 15 minutes.")
+Patient
 
-    elif 70 <= glucose < 80:
-        add(2,
-            "🟠 Your glucose is slightly below the target range. Consider a light carbohydrate snack if your next meal is more than an hour away.")
+Age: {age}
+Gender: {gender}
 
-    elif 80 <= glucose <= 140:
-        add(5,
-            "🟢 Your current blood glucose is within the healthy target range. Keep following your current meal and activity habits.")
+Height: {height} cm
+Weight: {weight} kg
 
-    elif 140 < glucose <= 180:
-        add(2,
-            "🟠 Your glucose is mildly elevated. Drinking water and taking a short walk after eating may help improve glucose control.")
+BMI: {bmi:.1f}
+BMI Category: {bmi_category}
 
-    elif glucose > 180:
-        add(1,
-            "🔴 Your blood glucose is above the recommended range. Avoid sugary foods for the next few hours and monitor your glucose closely.")
+Diabetes Type:
+{diabetes_type}
 
-    # -------------------------
-    # 2. Predicted Glucose Peak
-    # -------------------------
-    if predicted_peak >= 250:
-        add(1,
-            "📈 A very high glucose spike is predicted after this meal. Reducing portion size and including protein or fiber can help lower future spikes.")
+Current Blood Glucose:
+{current_glucose} mg/dL
 
-    elif predicted_peak >= 200:
-        add(2,
-            "📈 A significant glucose rise is expected. A 15–20 minute walk after eating may reduce the glucose peak.")
+Predicted Peak Glucose:
+{predicted_peak} mg/dL
 
-    elif predicted_peak >= 160:
-        add(3,
-            "📊 A moderate glucose rise is predicted. Monitor your next reading and avoid additional sugary snacks.")
+Meal
 
-    elif predicted_peak < 140:
-        add(5,
-            "✅ Your predicted glucose response is stable, indicating good metabolic control for this meal.")
+Calories: {calories:.0f} kcal
+Carbohydrates: {carbs:.1f} g
+Protein: {protein:.1f} g
+Fat: {fat:.1f} g
 
-    # -------------------------
-    # 3. Carbohydrate Intake
-    # -------------------------
-    if carbs >= 100:
-        add(1,
-            "🍚 This meal contains a very high amount of carbohydrates. Consider reducing portions or replacing refined carbs with whole grains and vegetables.")
+Return ONLY JSON.
 
-    elif carbs >= 70:
-        add(2,
-            "🍽 Your carbohydrate intake is relatively high. Pair carbohydrates with paneer, dal, yogurt, or pulses to slow glucose absorption.")
+{
+    "risk":"",
+    "overall":"",
+    "meal":"",
+    "exercise":"",
+    "lifestyle":"",
+    "positive":"",
+    "warnings":[
+        "",
+        ""
+    ]
+}
 
-    elif carbs >= 40:
-        add(4,
-            "🥗 Your carbohydrate intake is moderate. Including more vegetables can further improve blood sugar stability.")
+Rules
 
-    else:
-        add(5,
-            "✅ Your carbohydrate intake is well balanced for this meal.")
+Keep recommendations simple.
 
-    # -------------------------
-    # 4. BMI
-    # -------------------------
-    if bmi_cat == "Underweight":
-        add(2,
-            "⚖ Your BMI is below the healthy range. Focus on nutritious calorie-dense foods and adequate protein intake.")
+Do not recommend medicines.
 
-    elif bmi_cat == "Healthy":
-        add(5,
-            "✅ Your BMI is within the healthy range. Continue maintaining your current lifestyle.")
+Do not diagnose disease.
 
-    elif bmi_cat == "Overweight":
-        add(3,
-            "⚖ Losing even 5% of body weight can improve insulin sensitivity and overall metabolic health.")
+Use less than 150 words.
+"""
 
-    elif bmi_cat == "Obese":
-        add(2,
-            "⚖ Weight management can greatly improve blood sugar control. Gradual weight loss through diet and physical activity is recommended.")
+    response = model.generate_content(prompt)
 
-    # -------------------------
-    # 5. Diabetes-specific Advice
-    # -------------------------
-    if diabetes_type == "Type 1 Diabetes":
-        add(2,
-            "💉 Continue accurate carbohydrate counting and follow your prescribed insulin-to-carbohydrate ratio.")
+    text = response.text.strip()
 
-    elif diabetes_type == "Type 2 Diabetes":
-        add(2,
-            "🥦 Emphasize high-fiber foods, whole grains, legumes, and regular physical activity to improve glucose control.")
+    if text.startswith("```json"):
+        text = text.replace("```json", "").replace("```", "").strip()
 
-    elif diabetes_type == "Prediabetes":
-        add(3,
-            "🌱 Lifestyle changes can often prevent progression to diabetes. Aim for at least 150 minutes of exercise each week.")
-
-    else:
-        add(5,
-            "💚 Continue maintaining healthy eating habits and regular exercise to reduce future diabetes risk.")
-
-    # -------------------------
-    # 6. Combined Intelligence
-    # -------------------------
-    if glucose > 180 and predicted_peak > 220:
-        add(1,
-            "🚨 Your current glucose is high and is expected to rise further. Avoid additional carbohydrates today and monitor your glucose over the next 2 hours.")
-
-    if carbs > 80 and predicted_peak > 200:
-        add(2,
-            "🥣 The carbohydrate content of this meal is likely driving the predicted glucose spike. Next time, reduce refined carbs and increase protein or fiber.")
-
-    if bmi_cat in ["Overweight", "Obese"] and diabetes_type == "Type 2 Diabetes":
-        add(2,
-            "📉 Improving body weight through gradual lifestyle changes can significantly reduce insulin resistance.")
-
-    if glucose < 140 and predicted_peak < 160 and carbs < 60:
-        add(5,
-            "🎉 Excellent metabolic profile! Your current glucose, meal composition, and predicted response are all within healthy limits.")
-
-    # -------------------------
-    # 7. General Wellness
-    # -------------------------
-    add(4,
-        "💧 Stay hydrated by drinking 2–3 liters of water throughout the day unless advised otherwise by your doctor.")
-
-    add(4,
-        "🚶 Aim for at least 30 minutes of moderate physical activity daily. Even a short walk after meals can improve glucose control.")
-
-    add(4,
-        "😴 Aim for 7–9 hours of quality sleep each night, as poor sleep can increase insulin resistance.")
-
-    # -------------------------
-    # Remove duplicate messages
-    # -------------------------
-    unique = []
-    seen = set()
-
-    for priority, msg in recommendations:
-        if msg not in seen:
-            seen.add(msg)
-            unique.append((priority, msg))
-
-    # Sort by priority
-    unique.sort(key=lambda x: x[0])
-
-    # Return top 7 recommendations
-    return [msg for _, msg in unique[:7]]
-
-
-def generate_pdf_report(
-    patient: dict,
-    nutrition: dict,
-    glucose_now: float,
-    predictions: dict,
-    score: float,
-    risk: str,
-    recommendations: list[str],
-    bmi: float,
-    bmi_cat: str,
-) -> bytes:
-    """Generate a professional PDF health report using ReportLab."""
-    from reportlab.lib.pagesizes import A4
-    from reportlab.lib import colors
-    from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
-    from reportlab.lib.units import cm
-    from reportlab.platypus import SimpleDocTemplate, Paragraph, Spacer, Table, TableStyle, HRFlowable
-    from reportlab.lib.enums import TA_CENTER, TA_LEFT
-
-    buf = io.BytesIO()
-    doc = SimpleDocTemplate(buf, pagesize=A4,
-                            leftMargin=2*cm, rightMargin=2*cm,
-                            topMargin=2*cm, bottomMargin=2*cm)
-
-    styles = getSampleStyleSheet()
-    elements = []
+    return json.loads(text)
 
     # ── Color palette ──
     CYAN   = colors.HexColor('#00d9ff')
