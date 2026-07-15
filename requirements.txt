@@ -1,7 +1,7 @@
-streamlit
-pandas
-numpy
-scikit-learn
-matplotlib
-plotly
-google-generativeai
+streamlit==1.59.1
+pandas==3.0.3
+numpy==2.5.1
+pyarrow==25.0.0
+plotly==6.9.0
+reportlab==5.0.0
+google-genai
