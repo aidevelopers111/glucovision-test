@@ -1,3 +1,5 @@
+import google.generativeai as genai
+import json
 """
 GLUCOVISION AI
 AI-Powered Personalized Diabetes Monitoring & Glucose Prediction System
@@ -18,7 +20,9 @@ import hmac
 import json
 import secrets
 from pathlib import Path
+genai.configure(api_key="AQ.Ab8RN6K9MlT9BIPsEAIPmkmzMayTbyf7NxKvMpHM0GtcKWzk7w")
 
+model = genai.GenerativeModel("gemini-2.5-flash")
 # ─── ACCOUNT SYSTEM (freemium: free vs premium) ────────────────────────────────
 # NOTE: This is a lightweight local JSON "database" suitable for a prototype /
 # science-fair demo. It is NOT production-grade security (no HTTPS enforcement,
