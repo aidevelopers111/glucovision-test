@@ -14,6 +14,11 @@ from datetime import datetime, timedelta
 import io
 import math
 import os
+import hashlib
+import hmac
+import json
+import secrets
+from pathlib import Path
 
 # Gemini (Google Gen AI SDK) — used to generate richer, more natural AI
 # recommendations in Section 8. Imported defensively: if the package isn't
@@ -27,6 +32,159 @@ except ImportError:
 
 GEMINI_MODEL = "gemini-flash-latest"        # auto-updating alias for the newest stable Flash model
 GEMINI_MODEL_FALLBACK = "gemini-3.5-flash"  # pinned fallback if the alias ever changes/misbehaves
+
+# ─── ACCOUNT SYSTEM (freemium: free vs premium) ────────────────────────────────
+# NOTE: This is a lightweight local JSON "database" suitable for a prototype /
+# science-fair demo. It is NOT production-grade security (no HTTPS enforcement,
+# no rate limiting, no email verification). Passwords are salted + hashed with
+# PBKDF2 before storage — the plaintext password itself is never saved.
+USERS_DB_PATH = Path(__file__).parent / "glucovision_users.json"
+
+
+def _load_users() -> dict:
+    if USERS_DB_PATH.exists():
+        try:
+            with open(USERS_DB_PATH, "r") as f:
+                return json.load(f)
+        except (json.JSONDecodeError, OSError):
+            return {}
+    return {}
+
+
+def _save_users(users: dict) -> None:
+    with open(USERS_DB_PATH, "w") as f:
+        json.dump(users, f, indent=2, default=str)
+
+
+def _hash_password(password: str, salt: str = None) -> tuple[str, str]:
+    if salt is None:
+        salt = secrets.token_hex(16)
+    pwd_hash = hashlib.pbkdf2_hmac("sha256", password.encode(), salt.encode(), 100_000).hex()
+    return pwd_hash, salt
+
+
+def _verify_password(password: str, salt: str, stored_hash: str) -> bool:
+    test_hash, _ = _hash_password(password, salt)
+    return hmac.compare_digest(test_hash, stored_hash)
+
+
+def account_exists(username: str) -> bool:
+    return username.strip().lower() in _load_users()
+
+
+def create_account(username: str, email: str, password: str) -> tuple[bool, str]:
+    """Create a new free-tier account and persist every field the sign-up
+    form collected (username, email, hashed credentials, timestamps)."""
+    users = _load_users()
+    key = username.strip().lower()
+    if not key or not password:
+        return False, "Username and password are required."
+    if key in users:
+        return False, "That username is already taken."
+    pwd_hash, salt = _hash_password(password)
+    users[key] = {
+        "username": username.strip(),
+        "email": email.strip(),
+        "password_hash": pwd_hash,
+        "salt": salt,
+        "premium": False,
+        "created_at": datetime.now().isoformat(),
+        "last_login": None,
+        "profile": {},          # patient-profile data, saved separately once entered
+    }
+    _save_users(users)
+    return True, "Account created! You can now log in."
+
+
+def authenticate(username: str, password: str) -> tuple[bool, str]:
+    users = _load_users()
+    key = username.strip().lower()
+    if key not in users:
+        return False, "No account found with that username."
+    record = users[key]
+    if not _verify_password(password, record["salt"], record["password_hash"]):
+        return False, "Incorrect password."
+    record["last_login"] = datetime.now().isoformat()
+    users[key] = record
+    _save_users(users)
+    return True, "Welcome back!"
+
+
+def get_user_record(username: str) -> dict:
+    return _load_users().get(username.strip().lower(), {})
+
+
+def update_user_record(user_key: str, updates: dict) -> None:
+    users = _load_users()
+    if user_key in users:
+        users[user_key].update(updates)
+        _save_users(users)
+
+
+def set_premium(user_key: str, value: bool) -> None:
+    update_user_record(user_key, {"premium": value})
+
+
+def render_auth_page():
+    """Login / sign-up gate shown before any part of the app is accessible."""
+    st.markdown("""
+    <div class="hero-header">
+        <div class="hero-title">🩺 GlucoVision AI</div>
+        <div class="hero-subtitle">Sign in to your account to continue</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="disclaimer">
+        ⚠️ <strong>EDUCATIONAL PROTOTYPE ONLY.</strong>
+        Accounts on this demo are stored locally and are NOT suitable for real
+        medical or personally identifiable data.
+    </div>
+    """, unsafe_allow_html=True)
+
+    tab_login, tab_signup = st.tabs(["🔑 Log In", "📝 Sign Up"])
+
+    with tab_login:
+        with st.form("login_form"):
+            username = st.text_input("Username", key="login_username")
+            password = st.text_input("Password", type="password", key="login_password")
+            submitted = st.form_submit_button("Log In", use_container_width=True)
+        if submitted:
+            ok, msg = authenticate(username, password)
+            if ok:
+                record = get_user_record(username)
+                st.session_state.authenticated = True
+                st.session_state.user_key      = username.strip().lower()
+                st.session_state.username      = record["username"]
+                st.session_state.premium       = record.get("premium", False)
+                st.session_state.profile       = record.get("profile", {}) or {}
+                st.success(msg)
+                st.rerun()
+            else:
+                st.error(msg)
+
+    with tab_signup:
+        st.caption("Free to join — you can upgrade to Premium any time after signing up.")
+        with st.form("signup_form"):
+            new_username = st.text_input("Choose a Username", key="signup_username")
+            new_email    = st.text_input("Email", key="signup_email")
+            new_password = st.text_input("Choose a Password", type="password", key="signup_password")
+            confirm_pw   = st.text_input("Confirm Password", type="password", key="signup_confirm")
+            submitted2   = st.form_submit_button("Create Account", use_container_width=True)
+        if submitted2:
+            if not new_username.strip():
+                st.error("Please choose a username.")
+            elif new_password != confirm_pw:
+                st.error("Passwords do not match.")
+            elif len(new_password) < 6:
+                st.error("Password must be at least 6 characters.")
+            else:
+                ok, msg = create_account(new_username, new_email, new_password)
+                if ok:
+                    st.success(msg + " Switch to the 🔑 Log In tab to continue.")
+                else:
+                    st.error(msg)
+
 
 # ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -1203,6 +1361,134 @@ def three_month_trend_chart(dates, values) -> go.Figure:
     return fig
 
 
+# ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
+
+def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
+    """Rule-based AI diet plan built from the same health report (diabetes
+    status, BMI category, risk level) computed earlier in the app."""
+    st.markdown("#### 🥗 Personalised AI Diet Plan")
+    st.caption("Generated from your health report: diabetes status, BMI category, and risk level.")
+
+    if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
+        plan_label = "Low-Carb Plan"
+        pool = [k for k, v in FOOD_DB.items() if v["carbs"] <= 15]
+    elif risk == "Medium Risk" or bmi_cat in ("Overweight", "Obese"):
+        plan_label = "Moderate-Carb Plan"
+        pool = [k for k, v in FOOD_DB.items() if 8 <= v["carbs"] <= 25]
+    else:
+        plan_label = "Balanced Plan"
+        pool = list(FOOD_DB.keys())
+
+    if not pool:
+        pool = list(FOOD_DB.keys())
+
+    seed = abs(hash(st.session_state.get("user_key", "guest"))) % (2**32)
+    rng = np.random.default_rng(seed=seed)
+    meal_slots = {
+        "🌅 Breakfast": 2,
+        "🍛 Lunch": 2,
+        "🌙 Dinner": 2,
+        "🍎 Snack": 1,
+    }
+    st.markdown(f"**Plan Type:** {plan_label} &nbsp;|&nbsp; **Based on:** {diabetes_type}, {bmi_cat} BMI, {risk}")
+    for meal, n in meal_slots.items():
+        n = min(n, len(pool))
+        items = rng.choice(pool, size=n, replace=False)
+        st.markdown(f"**{meal}**")
+        for it in items:
+            info = FOOD_DB[it]
+            st.markdown(f"- {it} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
+
+    st.info("💡 This is a rule-based educational suggestion, not a clinical diet prescription. Consult a registered dietitian for a medically supervised plan.")
+
+
+def render_mbti_calculator():
+    """Simple 4-question MBTI-style personality self-assessment."""
+    st.markdown("#### 🧠 MBTI Personality Calculator")
+    st.caption("Understanding your personality style can help tailor how you approach health routines.")
+
+    q1 = st.radio("At a party, you tend to:",
+                  ["Mingle with lots of people (E)", "Stick with a few close friends (I)"], key="mbti_q1")
+    q2 = st.radio("You prefer information that is:",
+                  ["Concrete and factual (S)", "Abstract and theoretical (N)"], key="mbti_q2")
+    q3 = st.radio("When deciding, you rely more on:",
+                  ["Logic and consistency (T)", "Values and people impact (F)"], key="mbti_q3")
+    q4 = st.radio("You prefer your days to be:",
+                  ["Planned and structured (J)", "Flexible and spontaneous (P)"], key="mbti_q4")
+
+    if st.button("🔮 Calculate My MBTI Type", key="mbti_calc_btn"):
+        mbti = ("E" if "(E)" in q1 else "I") + ("S" if "(S)" in q2 else "N") + \
+               ("T" if "(T)" in q3 else "F") + ("J" if "(J)" in q4 else "P")
+        trait_desc = {
+            "E": "outgoing, energised by others", "I": "reflective, energised by solitude",
+            "S": "detail-oriented and practical", "N": "idea-driven and big-picture",
+            "T": "logical and objective", "F": "empathetic and values-driven",
+            "J": "structured and routine-loving", "P": "flexible and spontaneous",
+        }
+        st.success(f"### Your Type: {mbti}")
+        st.write(", ".join(trait_desc[c] for c in mbti).capitalize() + ".")
+        tip = ("Structured types often do well with fixed meal and medication schedules — "
+               "try recurring reminders." if mbti[3] == "J" else
+               "Flexible types may do better pairing glucose checks with an existing daily "
+               "habit, rather than a rigid schedule.")
+        st.info(f"💡 Wellness tip: {tip}")
+
+
+def render_sleep_quality():
+    """Sleep quality score — sleep affects insulin sensitivity and glucose control."""
+    st.markdown("#### 😴 Sleep Quality Analyzer")
+    st.caption("Sleep quality strongly affects insulin sensitivity and glucose control.")
+
+    hours     = st.slider("Average hours of sleep per night", 0.0, 12.0, 7.0, 0.5, key="sleep_hours")
+    wakeups   = st.number_input("Times you wake up during the night", 0, 10, 1, key="sleep_wakeups")
+    refreshed = st.slider("How refreshed do you feel on waking? (1=Exhausted, 10=Fully Refreshed)",
+                          1, 10, 6, key="sleep_refreshed")
+
+    if st.button("💤 Calculate Sleep Score", key="sleep_calc_btn"):
+        score = 100.0
+        if hours < 6 or hours > 9: score -= 25
+        elif hours < 7 or hours > 8.5: score -= 10
+        score -= wakeups * 6
+        score += (refreshed - 5) * 4
+        score = max(0, min(100, round(score)))
+
+        st.metric("😴 Sleep Quality Score", f"{score}/100")
+        if score >= 75:
+            st.success("✅ Good sleep quality. Consistent sleep supports stable glucose levels.")
+        elif score >= 50:
+            st.warning("⚠️ Moderate sleep quality. A consistent bedtime and less screen time before bed may help.")
+        else:
+            st.error("🚨 Poor sleep quality detected. Sleep deprivation can raise insulin resistance — consider consulting a doctor if this persists.")
+
+
+def render_stress_assessment():
+    """Short Likert-scale stress assessment — chronic stress raises cortisol,
+    which can elevate blood glucose."""
+    st.markdown("#### 💆 Stress Level Assessment")
+    st.caption("Chronic stress raises cortisol, which can elevate blood glucose.")
+
+    questions = [
+        "I feel overwhelmed by daily responsibilities.",
+        "I have trouble relaxing.",
+        "I feel anxious about my health.",
+        "I have difficulty concentrating.",
+        "I feel irritable or on edge.",
+    ]
+    total = 0
+    for i, q in enumerate(questions):
+        total += st.slider(q, 1, 5, 3, key=f"stress_q{i}")
+
+    if st.button("🧘 Calculate Stress Score", key="stress_calc_btn"):
+        pct = round((total / (5 * 5)) * 100)
+        st.metric("💆 Stress Level", f"{pct}%")
+        if pct < 40:
+            st.success("✅ Low stress levels. Keep up your current coping strategies.")
+        elif pct < 70:
+            st.warning("⚠️ Moderate stress. Consider mindfulness, light exercise, or breathing exercises.")
+        else:
+            st.error("🚨 High stress levels detected. Elevated stress can worsen glucose control — consider speaking with a healthcare provider or counsellor.")
+
+
 # ─── SIDEBAR ──────────────────────────────────────────────────────────────────
 
 def render_sidebar():
@@ -1232,6 +1518,23 @@ def render_sidebar():
             st.markdown(f'<div class="nav-pill">{icon} &nbsp;{name}</div>', unsafe_allow_html=True)
 
         st.markdown("---")
+        st.markdown("### 👤 My Account")
+        st.markdown(f"**{st.session_state.get('username', '')}**")
+        if st.session_state.get("premium"):
+            st.markdown('<span class="risk-low">⭐ PREMIUM MEMBER</span>', unsafe_allow_html=True)
+        else:
+            st.markdown('<span class="risk-medium">🆓 FREE PLAN</span>', unsafe_allow_html=True)
+            if st.button("⭐ Upgrade to Premium", key="upgrade_btn_sidebar", use_container_width=True):
+                set_premium(st.session_state.user_key, True)
+                st.session_state.premium = True
+                st.success("🎉 You're now Premium!")
+                st.rerun()
+        if st.button("🚪 Log Out", key="logout_btn", use_container_width=True):
+            for k in ("authenticated", "username", "user_key", "premium", "profile"):
+                st.session_state.pop(k, None)
+            st.rerun()
+
+        st.markdown("---")
         st.markdown("""
         <div style="font-size:0.72rem; color:#475569; text-align:center; padding:0.5rem 0;">
             <strong style="color:#ff3b3b">⚠️ Educational Prototype</strong><br>
@@ -1252,6 +1555,10 @@ def render_sidebar():
 # ─── MAIN APP ─────────────────────────────────────────────────────────────────
 
 def main():
+    if not st.session_state.get("authenticated"):
+        render_auth_page()
+        return
+
     render_sidebar()
 
     # ── Hero Header ──
@@ -1282,22 +1589,32 @@ def main():
     </div>
     """, unsafe_allow_html=True)
 
+    saved_profile   = st.session_state.get("profile", {}) or {}
+    gender_options   = ["Select Gender", "Male", "Female", "Other", "Prefer not to say"]
+    diabetes_options = ["Select Status", "No Diabetes", "Prediabetes", "Type 1 Diabetes", "Type 2 Diabetes"]
+
     with st.container():
         col1, col2, col3 = st.columns(3)
         with col1:
-            name   = st.text_input("Full Name", value="", placeholder="Enter your name")
-            age    = st.number_input("Age (years)", min_value=0, max_value=120, value=0,
+            name   = st.text_input("Full Name", value=saved_profile.get("name", ""), placeholder="Enter your name")
+            age    = st.number_input("Age (years)", min_value=0, max_value=120,
+                                     value=int(saved_profile.get("age", 0)),
                                      help="Enter your age in years")
-            gender = st.selectbox("Gender", ["Select Gender", "Male", "Female", "Other", "Prefer not to say"])
+            gender = st.selectbox("Gender", gender_options,
+                                  index=gender_options.index(saved_profile["gender"])
+                                  if saved_profile.get("gender") in gender_options else 0)
         with col2:
-            weight = st.number_input("Weight (kg)", min_value=0.0, max_value=250.0, value=0.0, step=0.5,
+            weight = st.number_input("Weight (kg)", min_value=0.0, max_value=250.0,
+                                     value=float(saved_profile.get("weight", 0.0)), step=0.5,
                                      help="Enter your weight in kilograms")
-            height = st.number_input("Height (cm)", min_value=0.0, max_value=250.0, value=0.0, step=0.5,
+            height = st.number_input("Height (cm)", min_value=0.0, max_value=250.0,
+                                     value=float(saved_profile.get("height", 0.0)), step=0.5,
                                      help="Enter your height in centimetres")
         with col3:
             diabetes_type = st.selectbox(
-                "Diabetes Status",
-                ["Select Status", "No Diabetes", "Prediabetes", "Type 1 Diabetes", "Type 2 Diabetes"]
+                "Diabetes Status", diabetes_options,
+                index=diabetes_options.index(saved_profile["diabetes_type"])
+                if saved_profile.get("diabetes_type") in diabetes_options else 0
             )
 
         bmi, bmi_cat = calculate_bmi(weight, height)
@@ -1307,6 +1624,16 @@ def main():
         col_a.metric("⚖️ BMI", f"{bmi}")
         col_b.metric("🏷️ BMI Category", bmi_cat)
         col_c.metric("🧬 Diabetes Status", diabetes_type.split()[0])
+
+        if st.button("💾 Save Profile to My Account", key="save_profile_btn"):
+            profile_to_save = {
+                "name": name, "age": age, "gender": gender, "weight": weight,
+                "height": height, "diabetes_type": diabetes_type,
+                "bmi": bmi, "bmi_cat": bmi_cat, "updated_at": datetime.now().isoformat(),
+            }
+            update_user_record(st.session_state.user_key, {"profile": profile_to_save})
+            st.session_state.profile = profile_to_save
+            st.success("✅ Profile saved to your account — it'll be pre-filled next time you log in.")
 
         # ── 3-Month Glucose Trend & Classification (optional, HbA1c-style estimate) ──
         st.markdown("#### 📊 3-Month Glucose Trend Analysis <span style='font-size:0.7rem; color:#8b949e; font-weight:600'>(Optional)</span>", unsafe_allow_html=True)
@@ -1773,6 +2100,46 @@ def main():
                     key="pdf_download",
                 )
                 st.success("✅ PDF generated successfully!")
+
+    st.markdown("---")
+
+    # ════════════════════════════════════════════════════════════════════════════
+    # SECTION 11 · PREMIUM AI WELLNESS SUITE
+    # ════════════════════════════════════════════════════════════════════════════
+    st.markdown("""
+    <div class="section-header sh-green">
+        <div class="section-icon">⭐</div>
+        <div class="section-title">SECTION 11 — Premium AI Wellness Suite</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    if not st.session_state.get("premium"):
+        st.markdown("""
+        <div class="glass-card" style="text-align:center; padding:2rem;">
+            <div style="font-size:1.3rem; font-weight:800; color:#00d9ff; margin-bottom:0.5rem">🔒 Premium Features Locked</div>
+            <div style="color:#94a3b8; margin-bottom:1rem">
+            Unlock the AI Diet Plan, MBTI Personality Calculator, Sleep Quality Analyzer,
+            and Stress Assessment — all tailored to your health report.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        if st.button("⭐ Upgrade to Premium Now", key="upgrade_btn_section11"):
+            set_premium(st.session_state.user_key, True)
+            st.session_state.premium = True
+            st.success("🎉 You're now Premium!")
+            st.rerun()
+    else:
+        tab_diet, tab_mbti, tab_sleep, tab_stress = st.tabs(
+            ["🥗 AI Diet Plan", "🧠 MBTI Calculator", "😴 Sleep Quality", "💆 Stress Assessment"]
+        )
+        with tab_diet:
+            render_diet_plan(diabetes_type, bmi_cat, risk)
+        with tab_mbti:
+            render_mbti_calculator()
+        with tab_sleep:
+            render_sleep_quality()
+        with tab_stress:
+            render_stress_assessment()
 
     st.markdown("---")
 
