@@ -25,7 +25,8 @@ try:
 except ImportError:
     GEMINI_SDK_AVAILABLE = False
 
-GEMINI_MODEL = "gemini-2.5-flash"  # fast + inexpensive; swap for another available model if you prefer
+GEMINI_MODEL = "gemini-flash-latest"        # auto-updating alias for the newest stable Flash model
+GEMINI_MODEL_FALLBACK = "gemini-3.5-flash"  # pinned fallback if the alias ever changes/misbehaves
 
 # ─── PAGE CONFIG ──────────────────────────────────────────────────────────────
 st.set_page_config(
@@ -796,7 +797,16 @@ and no preamble or closing paragraph beyond the final disclaimer line."""
 
     try:
         client = _genai.Client(api_key=api_key)
-        response = client.models.generate_content(model=GEMINI_MODEL, contents=prompt)
+        try:
+            response = client.models.generate_content(model=GEMINI_MODEL, contents=prompt)
+        except Exception as first_err:
+            # If the alias 404s (e.g. Google renames/retires it), retry once
+            # with the pinned fallback model before giving up.
+            if "404" in str(first_err) or "NOT_FOUND" in str(first_err):
+                response = client.models.generate_content(model=GEMINI_MODEL_FALLBACK, contents=prompt)
+            else:
+                raise
+
         text = (response.text or "").strip()
         if not text:
             return None, "Gemini returned an empty response."
