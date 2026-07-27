@@ -1909,6 +1909,127 @@ def _get_groq_api_key() -> str | None:
     return os.environ.get("GROQ_API_KEY")
 
 
+def _get_groq_api_key() -> str | None:
+    """
+    Look for a Groq API key in:
+      1. Streamlit secrets (st.secrets["GROQ_API_KEY"])
+      2. Environment variable GROQ_API_KEY
+    """
+    try:
+        if "GROQ_API_KEY" in st.secrets:
+            return st.secrets["GROQ_API_KEY"]
+    except Exception:
+        pass
+    return os.environ.get("GROQ_API_KEY")
+
+
+def _is_vegetarian_food(name: str) -> bool:
+    bad_words = [
+        "chicken", "fish", "mutton", "egg", "prawn", "shrimp", "tuna",
+        "salmon", "duck", "turkey", "meat", "liver", "crab", "sardine"
+    ]
+    lower = name.lower()
+    return not any(w in lower for w in bad_words)
+
+
+def _pick_foods(pool: list[str], count: int, seed: int) -> list[str]:
+    if not pool:
+        return []
+    rng = np.random.default_rng(seed)
+    count = min(count, len(pool))
+    return list(rng.choice(pool, size=count, replace=False))
+
+
+def _build_fallback_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str:
+    """
+    Always returns a clean, structured vegetarian plan with headings and bullets.
+    """
+    seed = abs(hash((diabetes_type, bmi_cat, risk, st.session_state.get("user_key", "guest")))) % (2**32)
+
+    breakfast_pool = [
+        k for k in FOOD_DB.keys()
+        if _is_vegetarian_food(k) and any(x in k.lower() for x in [
+            "oats", "idli", "dosa", "poha", "upma", "dalia", "sprouts", "curd", "yogurt",
+            "millet", "ragi", "jowar", "bajra", "fruit", "apple", "papaya", "guava", "banana"
+        ])
+    ]
+    lunch_pool = [
+        k for k in FOOD_DB.keys()
+        if _is_vegetarian_food(k) and any(x in k.lower() for x in [
+            "roti", "chapati", "dal", "rajma", "chole", "sabzi", "paneer", "curd",
+            "rice", "khichdi", "quinoa", "millet", "sambar", "rasam"
+        ])
+    ]
+    dinner_pool = [
+        k for k in FOOD_DB.keys()
+        if _is_vegetarian_food(k) and any(x in k.lower() for x in [
+            "roti", "chapati", "dal", "sabzi", "paneer", "tofu", "curd",
+            "khichdi", "millet", "sambar", "rasam", "quinoa"
+        ])
+    ]
+    snack_pool = [
+        k for k in FOOD_DB.keys()
+        if _is_vegetarian_food(k) and any(x in k.lower() for x in [
+            "apple", "papaya", "guava", "orange", "pear", "kiwi", "pomegranate",
+            "nuts", "almonds", "peanuts", "buttermilk", "chaas", "sprouts", "cucumber", "carrot"
+        ])
+    ]
+
+    breakfast = _pick_foods(breakfast_pool, 3, seed + 1)
+    lunch = _pick_foods(lunch_pool, 3, seed + 2)
+    dinner = _pick_foods(dinner_pool, 3, seed + 3)
+    snacks = _pick_foods(snack_pool, 2, seed + 4)
+
+    # Build a format that always stays clean and easy to read
+    lines = []
+    lines.append("## Breakfast")
+    for item in breakfast:
+        info = FOOD_DB[item]
+        lines.append(f"- {item} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
+
+    lines.append("")
+    lines.append("## Lunch")
+    for item in lunch:
+        info = FOOD_DB[item]
+        lines.append(f"- {item} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
+
+    lines.append("")
+    lines.append("## Dinner")
+    for item in dinner:
+        info = FOOD_DB[item]
+        lines.append(f"- {item} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
+
+    lines.append("")
+    lines.append("## Snacks")
+    for item in snacks:
+        info = FOOD_DB[item]
+        lines.append(f"- {item} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
+
+    lines.append("")
+    lines.append("## Foods to Avoid")
+    if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
+        avoid_list = [
+            "Sugary drinks, sweets, fried snacks, white bread, excess rice portions",
+            "Deep-fried foods, packaged chips, and sugary desserts",
+            "Large portions of high-carb foods in one meal",
+        ]
+    else:
+        avoid_list = [
+            "Sugary drinks and desserts",
+            "Excess fried snacks and refined flour foods",
+            "Oversized portions of rice, roti, and potatoes",
+        ]
+    for item in avoid_list:
+        lines.append(f"- {item}")
+
+    lines.append("")
+    lines.append("## Note")
+    lines.append("- This plan is educational only.")
+    lines.append("- For a medical diet plan, consult a registered dietitian or doctor.")
+
+    return "\n".join(lines)
+
+
 def generate_groq_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> tuple[str | None, str | None]:
     """
     Ask Groq for a vegetarian diet plan based on the user's health data.
@@ -1928,38 +2049,78 @@ Patient snapshot:
 - BMI category: {bmi_cat}
 - Risk level: {risk}
 
-Write a practical vegetarian diet plan that is:
-- Strictly vegetarian
+Return the answer in EXACTLY this markdown format:
+
+## Breakfast
+- Option 1: ...
+- Option 2: ...
+- Option 3: ...
+
+## Lunch
+- Option 1: ...
+- Option 2: ...
+- Option 3: ...
+
+## Dinner
+- Option 1: ...
+- Option 2: ...
+- Option 3: ...
+
+## Snacks
+- Option 1: ...
+- Option 2: ...
+
+## Foods to Avoid
+- ...
+- ...
+- ...
+
+## Note
+- One short educational disclaimer.
+
+Rules:
+- Strictly vegetarian only
 - No egg, no chicken, no fish, no meat, no alcohol
 - India-friendly and easy to follow
 - Appropriate for diabetes management
-- 5 sections: breakfast, lunch, dinner, snacks, foods to avoid
-- Include portion guidance and simple meal examples
-- Keep it concise and readable
-- End with a short educational disclaimer
-
-Return only the diet plan text. No numbering header is required."""
+- Use bullet points only
+- Do not write paragraphs
+- Do not add anything outside the format above
+- Keep it concise and clean
+"""
 
     try:
         client = _Groq(api_key=api_key)
         completion = client.chat.completions.create(
             model="llama-3.3-70b-versatile",
             messages=[
-                {"role": "system", "content": "You create safe, vegetarian, educational diet plans."},
+                {
+                    "role": "system",
+                    "content": "You create safe, vegetarian, educational diet plans in strict markdown format."
+                },
                 {"role": "user", "content": prompt},
             ],
-            temperature=0.6,
+            temperature=0.2,
+            top_p=0.9,
         )
+
         text = completion.choices[0].message.content.strip()
         if not text:
             return None, "Groq returned an empty response."
+
+        # Light cleanup so the output stays in the requested structure
+        text = text.replace("•", "-").strip()
+        if "## Breakfast" not in text:
+            text = _build_fallback_veg_diet_plan(diabetes_type, bmi_cat, risk)
+
         return text, None
+
     except Exception as e:
         return None, f"Groq request failed: {e}"
 
 
 def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
-    """Groq-powered vegetarian diet plan with fallback."""
+    """Groq-powered vegetarian diet plan with structured fallback."""
     st.markdown("#### 🥗 Personalised AI Diet Plan")
     st.caption("Generated using Groq API and restricted to vegetarian foods only.")
 
@@ -1970,85 +2131,9 @@ def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
         st.markdown(plan_text)
     else:
         st.warning(f"Groq is unavailable ({plan_error}) — showing the fallback vegetarian plan.")
-
-        if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
-            plan_label = "Low-Carb Vegetarian Plan"
-            pool = [
-                k for k, v in FOOD_DB.items()
-                if v["carbs"] <= 15 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
-            ]
-        elif risk == "Medium Risk" or bmi_cat in ("Overweight", "Obese"):
-            plan_label = "Moderate-Carb Vegetarian Plan"
-            pool = [
-                k for k, v in FOOD_DB.items()
-                if 8 <= v["carbs"] <= 25 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
-            ]
-        else:
-            plan_label = "Balanced Vegetarian Plan"
-            pool = [
-                k for k in FOOD_DB.keys()
-                if all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
-            ]
-
-        if not pool:
-            pool = list(FOOD_DB.keys())
-
-        seed = abs(hash(st.session_state.get("user_key", "guest"))) % (2**32)
-        rng = np.random.default_rng(seed=seed)
-
-        meal_slots = {
-            "🌅 Breakfast": 2,
-            "🍛 Lunch": 2,
-            "🌙 Dinner": 2,
-            "🍎 Snack": 1,
-        }
-
-        st.markdown(f"**Plan Type:** {plan_label} &nbsp;|&nbsp; **Based on:** {diabetes_type}, {bmi_cat} BMI, {risk}")
-
-        for meal, n in meal_slots.items():
-            n = min(n, len(pool))
-            items = rng.choice(pool, size=n, replace=False)
-            st.markdown(f"**{meal}**")
-            for it in items:
-                info = FOOD_DB[it]
-                st.markdown(
-                    f"- {it} — {info['calories']:.0f} kcal, "
-                    f"{info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein"
-                )
-
+        fallback_plan = _build_fallback_veg_diet_plan(diabetes_type, bmi_cat, risk)
+        st.markdown(fallback_plan)
         st.info("💡 Vegetarian fallback plan shown because Groq was unavailable. It is educational only.")
-
-def render_mbti_calculator():
-    """Simple 4-question MBTI-style personality self-assessment."""
-    st.markdown("#### 🧠 MBTI Personality Calculator")
-    st.caption("Understanding your personality style can help tailor how you approach health routines.")
-
-    q1 = st.radio("At a party, you tend to:",
-                  ["Mingle with lots of people (E)", "Stick with a few close friends (I)"], key="mbti_q1")
-    q2 = st.radio("You prefer information that is:",
-                  ["Concrete and factual (S)", "Abstract and theoretical (N)"], key="mbti_q2")
-    q3 = st.radio("When deciding, you rely more on:",
-                  ["Logic and consistency (T)", "Values and people impact (F)"], key="mbti_q3")
-    q4 = st.radio("You prefer your days to be:",
-                  ["Planned and structured (J)", "Flexible and spontaneous (P)"], key="mbti_q4")
-
-    if st.button("🔮 Calculate My MBTI Type", key="mbti_calc_btn"):
-        mbti = ("E" if "(E)" in q1 else "I") + ("S" if "(S)" in q2 else "N") + \
-               ("T" if "(T)" in q3 else "F") + ("J" if "(J)" in q4 else "P")
-        trait_desc = {
-            "E": "outgoing, energised by others", "I": "reflective, energised by solitude",
-            "S": "detail-oriented and practical", "N": "idea-driven and big-picture",
-            "T": "logical and objective", "F": "empathetic and values-driven",
-            "J": "structured and routine-loving", "P": "flexible and spontaneous",
-        }
-        st.success(f"### Your Type: {mbti}")
-        st.write(", ".join(trait_desc[c] for c in mbti).capitalize() + ".")
-        tip = ("Structured types often do well with fixed meal and medication schedules — "
-               "try recurring reminders." if mbti[3] == "J" else
-               "Flexible types may do better pairing glucose checks with an existing daily "
-               "habit, rather than a rigid schedule.")
-        st.info(f"💡 Wellness tip: {tip}")
-
 
 def render_sleep_quality():
     """Sleep quality score — sleep affects insulin sensitivity and glucose control."""
