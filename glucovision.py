@@ -1813,44 +1813,118 @@ def three_month_trend_chart(dates, values) -> go.Figure:
 
 # ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
 
+# ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
+
+def get_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str:
+    """Generate a strict vegetarian diet plan using Gemini."""
+    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    if not api_key or not GEMINI_SDK_AVAILABLE:
+        return ""
+
+    try:
+        client = _genai.Client(api_key=api_key)
+
+        system_instruction = (
+            "You are a strict vegetarian diet assistant for an educational diabetes app. "
+            "Return only vegetarian food ideas. Do not include egg, chicken, fish, meat, or alcohol. "
+            "Keep the advice practical, India-friendly, and concise. "
+            "This is for educational use only and not medical advice."
+        )
+
+        user_prompt = f"""
+Create a vegetarian AI diet recommendation plan for a person with:
+- Diabetes status: {diabetes_type}
+- BMI category: {bmi_cat}
+- Risk level: {risk}
+
+Rules:
+- Strictly vegetarian only
+- No egg, no meat, no fish
+- Keep food common and easy to find in India
+- Include breakfast, lunch, dinner, and 2 snacks
+- For each meal, give 2-3 options
+- Add portion guidance
+- Keep it readable and practical
+- Prefer low sugar, high fibre, balanced protein, and controlled carbs
+- Mention foods to limit or avoid
+- End with a short note that it is educational only
+"""
+
+        interaction = client.interactions.create(
+            model=GEMINI_MODEL,
+            system_instruction=system_instruction,
+            input=user_prompt,
+            generation_config={
+                "temperature": 0.6,
+            },
+        )
+
+        return interaction.output_text.strip()
+
+    except Exception as e:
+        return f"ERROR: {e}"
+
+
 def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
-    """Rule-based AI diet plan built from the same health report (diabetes
-    status, BMI category, risk level) computed earlier in the app."""
+    """Gemini-powered vegetarian diet plan with fallback."""
     st.markdown("#### 🥗 Personalised AI Diet Plan")
-    st.caption("Generated from your health report: diabetes status, BMI category, and risk level.")
+    st.caption("Generated using Gemini API and restricted to vegetarian foods only.")
 
-    if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
-        plan_label = "Low-Carb Plan"
-        pool = [k for k, v in FOOD_DB.items() if v["carbs"] <= 15]
-    elif risk == "Medium Risk" or bmi_cat in ("Overweight", "Obese"):
-        plan_label = "Moderate-Carb Plan"
-        pool = [k for k, v in FOOD_DB.items() if 8 <= v["carbs"] <= 25]
+    plan_text = get_gemini_veg_diet_plan(diabetes_type, bmi_cat, risk)
+
+    if plan_text and not plan_text.startswith("ERROR:"):
+        st.success("✅ Gemini-generated vegetarian plan ready")
+        st.markdown(plan_text)
     else:
-        plan_label = "Balanced Plan"
-        pool = list(FOOD_DB.keys())
+        st.warning("Gemini API is not available, so showing the fallback vegetarian plan.")
 
-    if not pool:
-        pool = list(FOOD_DB.keys())
+        # Vegetarian fallback
+        if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
+            plan_label = "Low-Carb Vegetarian Plan"
+            pool = [
+                k for k, v in FOOD_DB.items()
+                if v["carbs"] <= 15 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
+        elif risk == "Medium Risk" or bmi_cat in ("Overweight", "Obese"):
+            plan_label = "Moderate-Carb Vegetarian Plan"
+            pool = [
+                k for k, v in FOOD_DB.items()
+                if 8 <= v["carbs"] <= 25 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
+        else:
+            plan_label = "Balanced Vegetarian Plan"
+            pool = [
+                k for k in FOOD_DB.keys()
+                if all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
 
-    seed = abs(hash(st.session_state.get("user_key", "guest"))) % (2**32)
-    rng = np.random.default_rng(seed=seed)
-    meal_slots = {
-        "🌅 Breakfast": 2,
-        "🍛 Lunch": 2,
-        "🌙 Dinner": 2,
-        "🍎 Snack": 1,
-    }
-    st.markdown(f"**Plan Type:** {plan_label} &nbsp;|&nbsp; **Based on:** {diabetes_type}, {bmi_cat} BMI, {risk}")
-    for meal, n in meal_slots.items():
-        n = min(n, len(pool))
-        items = rng.choice(pool, size=n, replace=False)
-        st.markdown(f"**{meal}**")
-        for it in items:
-            info = FOOD_DB[it]
-            st.markdown(f"- {it} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
+        if not pool:
+            pool = list(FOOD_DB.keys())
 
-    st.info("💡 This is a rule-based educational suggestion, not a clinical diet prescription. Consult a registered dietitian for a medically supervised plan.")
+        seed = abs(hash(st.session_state.get("user_key", "guest"))) % (2**32)
+        rng = np.random.default_rng(seed=seed)
 
+        meal_slots = {
+            "🌅 Breakfast": 2,
+            "🍛 Lunch": 2,
+            "🌙 Dinner": 2,
+            "🍎 Snack": 1,
+        }
+
+        st.markdown(f"**Plan Type:** {plan_label} &nbsp;|&nbsp; **Based on:** {diabetes_type}, {bmi_cat} BMI, {risk}")
+
+        for meal, n in meal_slots.items():
+            n = min(n, len(pool))
+            items = rng.choice(pool, size=n, replace=False)
+            st.markdown(f"**{meal}**")
+            for it in items:
+                info = FOOD_DB[it]
+                st.markdown(
+                    f"- {it} — {info['calories']:.0f} kcal, "
+                    f"{info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein"
+                )
+
+        st.info("💡 Vegetarian fallback plan shown because Gemini was unavailable. It is educational only.")
 
 def render_mbti_calculator():
     """Simple 4-question MBTI-style personality self-assessment."""
