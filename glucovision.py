@@ -1818,88 +1818,131 @@ def three_month_trend_chart(dates, values) -> go.Figure:
 
 # ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
 
-def get_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str:
-    """Generate a strict vegetarian diet plan using Gemini."""
+prompt = f"""
+You are an expert Indian vegetarian dietitian.
 
-    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+Your job is to create a practical diabetes-friendly meal plan using foods commonly available in Indian households.
 
-    if not api_key or not GEMINI_SDK_AVAILABLE:
-        return ""
-
-    try:
-        client = _genai.Client(api_key=api_key)
-
-        system_instruction = (
-            "You are a supportive vegetarian diet assistant for an educational diabetes app. "
-            "Return ONLY vegetarian meal suggestions. "
-            "Never recommend egg, chicken, fish, meat, seafood or alcohol. "
-            "Keep the advice India-friendly, practical, and educational."
-        )
-
-        prompt = f"""
-Patient Snapshot
-----------------
-Diabetes Status: {diabetes_type}
+Patient Details
+---------------
+Diabetes Type: {diabetes_type}
 BMI Category: {bmi_cat}
 Risk Level: {risk}
 
-Generate a personalised vegetarian diet plan.
+Generate a ONE-DAY vegetarian meal plan.
 
-Return ONLY in this format:
+Requirements:
 
-## Breakfast
+• STRICTLY VEGETARIAN.
+• Never recommend egg, chicken, fish, meat, seafood or alcohol.
+• Recommend only foods commonly cooked in Indian homes.
+• Meals should be affordable.
+• Use seasonal vegetables whenever possible.
+• Avoid processed foods.
+• Keep carbohydrates balanced.
+• Recommend high-fibre foods.
+• Recommend adequate protein.
+• Mention water intake.
+• Mention portion control.
+• Avoid excess sugar.
+• Avoid sweets.
+• Avoid soft drinks.
+• Avoid bakery products.
+• Avoid deep-fried foods.
+
+The meals should include foods such as:
+
+Breakfast:
+Poha
+Upma
+Vegetable Dalia
+Oats
+Moong Chilla
+Vegetable Besan Chilla
+Idli
+Vegetable Uttapam
+Ragi Dosa
+Sprouts
+Fruit
+Buttermilk
+
+Lunch:
+Chapati
+Phulka
+Brown Rice
+Millets
+Dal
+Rajma
+Chole
+Moong Dal
+Toor Dal
+Mixed Vegetable Sabzi
+Palak Paneer
+Lauki
+Tori
+Bhindi
+Beans
+Cabbage
+Salad
+Curd
+
+Evening Snack:
+Roasted Chana
+Fox Nuts (Makhana)
+Peanuts
+Sprouts Chaat
+Fruit
+Buttermilk
+Green Tea
+
+Dinner:
+Chapati
+Dal
+Vegetable Curry
+Paneer
+Tofu
+Khichdi
+Vegetable Soup
+Salad
+
+Output ONLY in this format:
+
+## 🥣 Breakfast
 - Option 1
 - Option 2
 - Option 3
 
-## Lunch
+## 🍛 Lunch
 - Option 1
 - Option 2
 - Option 3
 
-## Dinner
+## ☕ Evening Snack
+- Option 1
+- Option 2
+
+## 🌙 Dinner
 - Option 1
 - Option 2
 - Option 3
 
-## Snacks
-- Option 1
-- Option 2
-
-## Foods to Avoid
+## 🚫 Foods to Avoid
 - ...
 - ...
 - ...
 
-## Note
-- One short educational disclaimer.
+## 💧 Daily Tips
+- Drink 2–3 litres of water.
+- Walk for 30 minutes.
+- Eat at regular timings.
+- Maintain portion control.
+- Avoid skipping meals.
 
-Rules:
-- Vegetarian only
-- No egg
-- No chicken
-- No fish
-- No meat
-- No alcohol
-- Diabetes-friendly
-- India-friendly
-- Use bullet points only
-- Do not write paragraphs.
+Return ONLY the meal plan.
+Do NOT write explanations.
+Do NOT write paragraphs.
+Do NOT include non-vegetarian foods.
 """
-
-        response = client.models.generate_content(
-            model=GEMINI_MODEL,
-            contents=prompt,
-            config={
-                "system_instruction": system_instruction,
-                "temperature": 0.6,
-            },
-        )
-
-        return response.text.strip()
-
-    except Exception as e:
-        return f"ERROR: {str(e)}"
 
 def render_sleep_quality():
     """Sleep quality score — sleep affects insulin sensitivity and glucose control."""
