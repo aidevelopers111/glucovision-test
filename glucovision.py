@@ -24,15 +24,18 @@ from pathlib import Path
 # recommendations in Section 8. Imported defensively: if the package isn't
 # installed or no API key is configured, the app falls back to the original
 # rule-based recommendation engine instead of crashing.
+# --- imports ---
 try:
     from google import genai as _genai
     GEMINI_SDK_AVAILABLE = True
 except ImportError:
     GEMINI_SDK_AVAILABLE = False
 
-GEMINI_MODEL = "gemini-flash-latest"        # auto-updating alias for the newest stable Flash model
-GEMINI_MODEL_FALLBACK = "gemini-3.5-flash"  # pinned fallback if the alias ever changes/misbehaves
-
+try:
+    from groq import Groq as _Groq
+    GROQ_SDK_AVAILABLE = True
+except ImportError:
+    GROQ_SDK_AVAILABLE = False
 # ─── ACCOUNT SYSTEM (freemium: free vs premium) ────────────────────────────────
 # NOTE: This is a lightweight local JSON "database" suitable for a prototype /
 # science-fair demo. It is NOT production-grade security (no HTTPS enforcement,
