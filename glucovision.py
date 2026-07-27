@@ -24,18 +24,15 @@ from pathlib import Path
 # recommendations in Section 8. Imported defensively: if the package isn't
 # installed or no API key is configured, the app falls back to the original
 # rule-based recommendation engine instead of crashing.
-# --- imports ---
 try:
     from google import genai as _genai
     GEMINI_SDK_AVAILABLE = True
 except ImportError:
     GEMINI_SDK_AVAILABLE = False
 
-try:
-    from groq import Groq as _Groq
-    GROQ_SDK_AVAILABLE = True
-except ImportError:
-    GROQ_SDK_AVAILABLE = False
+GEMINI_MODEL = "gemini-flash-latest"        # auto-updating alias for the newest stable Flash model
+GEMINI_MODEL_FALLBACK = "gemini-3.5-flash"  # pinned fallback if the alias ever changes/misbehaves
+
 # ─── ACCOUNT SYSTEM (freemium: free vs premium) ────────────────────────────────
 # NOTE: This is a lightweight local JSON "database" suitable for a prototype /
 # science-fair demo. It is NOT production-grade security (no HTTPS enforcement,
@@ -1818,131 +1815,148 @@ def three_month_trend_chart(dates, values) -> go.Figure:
 
 # ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
 
-prompt = f"""
-You are an expert Indian vegetarian dietitian.
+def get_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str:
+    """Generate a strict vegetarian diet plan using Gemini."""
+    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    if not api_key or not GEMINI_SDK_AVAILABLE:
+        return ""
 
-Your job is to create a practical diabetes-friendly meal plan using foods commonly available in Indian households.
+    try:
+        client = _genai.Client(api_key=api_key)
 
-Patient Details
----------------
-Diabetes Type: {diabetes_type}
-BMI Category: {bmi_cat}
-Risk Level: {risk}
+        system_instruction = (
+            "You are a strict vegetarian diet assistant for an educational diabetes app. "
+            "Return only vegetarian food ideas. Do not include egg, chicken, fish, meat, or alcohol. "
+            "Keep the advice practical, India-friendly, and concise. "
+            "This is for educational use only and not medical advice."
+        )
 
-Generate a ONE-DAY vegetarian meal plan.
+        user_prompt = f"""
+Create a vegetarian AI diet recommendation plan for a person with:
+- Diabetes status: {diabetes_type}
+- BMI category: {bmi_cat}
+- Risk level: {risk}
 
-Requirements:
-
-• STRICTLY VEGETARIAN.
-• Never recommend egg, chicken, fish, meat, seafood or alcohol.
-• Recommend only foods commonly cooked in Indian homes.
-• Meals should be affordable.
-• Use seasonal vegetables whenever possible.
-• Avoid processed foods.
-• Keep carbohydrates balanced.
-• Recommend high-fibre foods.
-• Recommend adequate protein.
-• Mention water intake.
-• Mention portion control.
-• Avoid excess sugar.
-• Avoid sweets.
-• Avoid soft drinks.
-• Avoid bakery products.
-• Avoid deep-fried foods.
-
-The meals should include foods such as:
-
-Breakfast:
-Poha
-Upma
-Vegetable Dalia
-Oats
-Moong Chilla
-Vegetable Besan Chilla
-Idli
-Vegetable Uttapam
-Ragi Dosa
-Sprouts
-Fruit
-Buttermilk
-
-Lunch:
-Chapati
-Phulka
-Brown Rice
-Millets
-Dal
-Rajma
-Chole
-Moong Dal
-Toor Dal
-Mixed Vegetable Sabzi
-Palak Paneer
-Lauki
-Tori
-Bhindi
-Beans
-Cabbage
-Salad
-Curd
-
-Evening Snack:
-Roasted Chana
-Fox Nuts (Makhana)
-Peanuts
-Sprouts Chaat
-Fruit
-Buttermilk
-Green Tea
-
-Dinner:
-Chapati
-Dal
-Vegetable Curry
-Paneer
-Tofu
-Khichdi
-Vegetable Soup
-Salad
-
-Output ONLY in this format:
-
-## 🥣 Breakfast
-- Option 1
-- Option 2
-- Option 3
-
-## 🍛 Lunch
-- Option 1
-- Option 2
-- Option 3
-
-## ☕ Evening Snack
-- Option 1
-- Option 2
-
-## 🌙 Dinner
-- Option 1
-- Option 2
-- Option 3
-
-## 🚫 Foods to Avoid
-- ...
-- ...
-- ...
-
-## 💧 Daily Tips
-- Drink 2–3 litres of water.
-- Walk for 30 minutes.
-- Eat at regular timings.
-- Maintain portion control.
-- Avoid skipping meals.
-
-Return ONLY the meal plan.
-Do NOT write explanations.
-Do NOT write paragraphs.
-Do NOT include non-vegetarian foods.
+Rules:
+- Strictly vegetarian only
+- No egg, no meat, no fish
+- Keep food common and easy to find in India
+- Include breakfast, lunch, dinner, and 2 snacks
+- For each meal, give 2-3 options
+- Add portion guidance
+- Keep it readable and practical
+- Prefer low sugar, high fibre, balanced protein, and controlled carbs
+- Mention foods to limit or avoid
+- End with a short note that it is educational only
 """
+
+        interaction = client.interactions.create(
+            model=GEMINI_MODEL,
+            system_instruction=system_instruction,
+            input=user_prompt,
+            generation_config={
+                "temperature": 0.6,
+            },
+        )
+
+        return interaction.output_text.strip()
+
+    except Exception as e:
+        return f"ERROR: {e}"
+
+
+def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
+    """Gemini-powered vegetarian diet plan with fallback."""
+    st.markdown("#### 🥗 Personalised AI Diet Plan")
+    st.caption("Generated using Gemini API and restricted to vegetarian foods only.")
+
+    plan_text = get_gemini_veg_diet_plan(diabetes_type, bmi_cat, risk)
+
+    if plan_text and not plan_text.startswith("ERROR:"):
+        st.success("✅ Gemini-generated vegetarian plan ready")
+        st.markdown(plan_text)
+    else:
+        st.warning("Gemini API is not available, so showing the fallback vegetarian plan.")
+
+        # Vegetarian fallback
+        if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
+            plan_label = "Low-Carb Vegetarian Plan"
+            pool = [
+                k for k, v in FOOD_DB.items()
+                if v["carbs"] <= 15 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
+        elif risk == "Medium Risk" or bmi_cat in ("Overweight", "Obese"):
+            plan_label = "Moderate-Carb Vegetarian Plan"
+            pool = [
+                k for k, v in FOOD_DB.items()
+                if 8 <= v["carbs"] <= 25 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
+        else:
+            plan_label = "Balanced Vegetarian Plan"
+            pool = [
+                k for k in FOOD_DB.keys()
+                if all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
+
+        if not pool:
+            pool = list(FOOD_DB.keys())
+
+        seed = abs(hash(st.session_state.get("user_key", "guest"))) % (2**32)
+        rng = np.random.default_rng(seed=seed)
+
+        meal_slots = {
+            "🌅 Breakfast": 2,
+            "🍛 Lunch": 2,
+            "🌙 Dinner": 2,
+            "🍎 Snack": 1,
+        }
+
+        st.markdown(f"**Plan Type:** {plan_label} &nbsp;|&nbsp; **Based on:** {diabetes_type}, {bmi_cat} BMI, {risk}")
+
+        for meal, n in meal_slots.items():
+            n = min(n, len(pool))
+            items = rng.choice(pool, size=n, replace=False)
+            st.markdown(f"**{meal}**")
+            for it in items:
+                info = FOOD_DB[it]
+                st.markdown(
+                    f"- {it} — {info['calories']:.0f} kcal, "
+                    f"{info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein"
+                )
+
+        st.info("💡 Vegetarian fallback plan shown because Gemini was unavailable. It is educational only.")
+
+def render_mbti_calculator():
+    """Simple 4-question MBTI-style personality self-assessment."""
+    st.markdown("#### 🧠 MBTI Personality Calculator")
+    st.caption("Understanding your personality style can help tailor how you approach health routines.")
+
+    q1 = st.radio("At a party, you tend to:",
+                  ["Mingle with lots of people (E)", "Stick with a few close friends (I)"], key="mbti_q1")
+    q2 = st.radio("You prefer information that is:",
+                  ["Concrete and factual (S)", "Abstract and theoretical (N)"], key="mbti_q2")
+    q3 = st.radio("When deciding, you rely more on:",
+                  ["Logic and consistency (T)", "Values and people impact (F)"], key="mbti_q3")
+    q4 = st.radio("You prefer your days to be:",
+                  ["Planned and structured (J)", "Flexible and spontaneous (P)"], key="mbti_q4")
+
+    if st.button("🔮 Calculate My MBTI Type", key="mbti_calc_btn"):
+        mbti = ("E" if "(E)" in q1 else "I") + ("S" if "(S)" in q2 else "N") + \
+               ("T" if "(T)" in q3 else "F") + ("J" if "(J)" in q4 else "P")
+        trait_desc = {
+            "E": "outgoing, energised by others", "I": "reflective, energised by solitude",
+            "S": "detail-oriented and practical", "N": "idea-driven and big-picture",
+            "T": "logical and objective", "F": "empathetic and values-driven",
+            "J": "structured and routine-loving", "P": "flexible and spontaneous",
+        }
+        st.success(f"### Your Type: {mbti}")
+        st.write(", ".join(trait_desc[c] for c in mbti).capitalize() + ".")
+        tip = ("Structured types often do well with fixed meal and medication schedules — "
+               "try recurring reminders." if mbti[3] == "J" else
+               "Flexible types may do better pairing glucose checks with an existing daily "
+               "habit, rather than a rigid schedule.")
+        st.info(f"💡 Wellness tip: {tip}")
+
 
 def render_sleep_quality():
     """Sleep quality score — sleep affects insulin sensitivity and glucose control."""
@@ -2090,7 +2104,7 @@ def main():
     """, unsafe_allow_html=True)
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 1 · PATIENT PROFILE
+    # SECTION 1 • PATIENT PROFILE
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-blue">
@@ -2215,7 +2229,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 2 · INSULIN MANAGEMENT
+    # SECTION 2 • INSULIN MANAGEMENT
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-red">
@@ -2253,7 +2267,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 3 · FOOD INTELLIGENCE SYSTEM
+    # SECTION 3 • FOOD INTELLIGENCE SYSTEM
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-orange">
@@ -2308,7 +2322,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 4 · METABOLIC DIGITAL TWIN
+    # SECTION 4 • METABOLIC DIGITAL TWIN
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-teal">
@@ -2385,7 +2399,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 5 · AI GLUCOSE PREDICTION TABLE
+    # SECTION 5 • AI GLUCOSE PREDICTION TABLE
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-green">
@@ -2416,7 +2430,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 6 · ADVANCED VISUALIZATIONS
+    # SECTION 6 • ADVANCED VISUALIZATIONS
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-purple">
@@ -2441,7 +2455,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 7 · AI HEALTH ANALYTICS
+    # SECTION 7 • AI HEALTH ANALYTICS
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-pink">
@@ -2467,7 +2481,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 8 · AI RECOMMENDATIONS
+    # SECTION 8 • AI RECOMMENDATIONS
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-yellow">
@@ -2517,7 +2531,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 9 · FUTURE HEALTH INSIGHT
+    # SECTION 9 • FUTURE HEALTH INSIGHT
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-purple">
@@ -2559,7 +2573,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 10 · EXPORT REPORT (PDF)
+    # SECTION 10 • EXPORT REPORT (PDF)
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-blue">
@@ -2614,7 +2628,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 11 · PREMIUM AI WELLNESS SUITE
+    # SECTION 11 • PREMIUM AI WELLNESS SUITE
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-green">
@@ -2670,7 +2684,7 @@ def main():
             for any medical concerns.
         </div>
         <div style="font-size:0.72rem; color:#334155; margin-top:1rem">
-            GlucoVision AI v1.0 · Science Fair Edition · Built with Streamlit + Plotly + ReportLab
+            GlucoVision AI v1.0 • Science Fair Edition • Built with Streamlit + Plotly + ReportLab
         </div>
     </div>
     """, unsafe_allow_html=True)
