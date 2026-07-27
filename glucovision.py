@@ -1023,25 +1023,6 @@ INSULIN_TYPES = [
     "Mixed Insulin (70/30)",
 ]
 
-# ─── VEGETARIAN FOOD FILTER (used only by the AI Diet Plan feature) ───────────
-# Simple keyword denylist — good enough for this dataset's clean naming
-# conventions (e.g. "Chicken Biryani", "Fish Curry", "Egg Curry"). Anything
-# containing one of these words is treated as non-vegetarian and excluded
-# from the diet-plan pool, even though it can still be logged in Section 3
-# for people who do eat meat/fish/eggs and just want glucose predictions.
-_NON_VEG_KEYWORDS = (
-    "chicken", "mutton", "fish", "egg", "turkey", "duck", "prawn", "shrimp",
-    "crab", "tuna", "salmon", "sardine", "rogan josh", "keema", "bacon",
-)
-
-
-def _is_veg(food_name: str) -> bool:
-    lname = food_name.lower()
-    return not any(k in lname for k in _NON_VEG_KEYWORDS)
-
-
-VEG_FOOD_DB = {k: v for k, v in FOOD_DB.items() if _is_veg(k)}
-
 # ─── HELPER FUNCTIONS ─────────────────────────────────────────────────────────
 
 def calculate_bmi(weight_kg: float, height_cm: float) -> tuple[float, str]:
@@ -1832,140 +1813,118 @@ def three_month_trend_chart(dates, values) -> go.Figure:
 
 # ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
 
-def render_diet_plan(
-    diabetes_type: str,
-    bmi_cat: str,
-    risk: str,
-    weight_kg: float,
-    age: int,
-    gender: str,
-    exercise_type: str,
-    exercise_duration_min: float,
-):
-    """
-    Vegetarian-only AI diet plan, rebuilt to actually use the patient's
-    profile instead of a fixed random pick:
+# ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
 
-    - Daily calorie need = Mifflin-St Jeor BMR (weight/age/gender, same
-      helper used by the glucose model) × an activity multiplier from
-      today's logged exercise.
-    - Macro split (carb/protein/fat %) shifts by diabetes status and risk
-      level — tighter carbs for Type 1/Type 2/High Risk, moderate for
-      Prediabetes/Medium Risk/Overweight-Obese, balanced otherwise.
-    - Meals are filled from a vegetarian-only food pool, greedily picking
-      items until each meal's calorie share is met (instead of a flat
-      random count), and items already used in an earlier meal are
-      excluded so nothing repeats across the day.
-    """
-    st.markdown("#### 🥗 Personalised AI Diet Plan (Vegetarian)")
-    st.caption("Built from your profile — diabetes status, BMI, risk level, weight, age, gender, and today's activity. Vegetarian options only.")
+def get_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str:
+    """Generate a strict vegetarian diet plan using Gemini."""
+    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    if not api_key or not GEMINI_SDK_AVAILABLE:
+        return ""
 
-    # ── 1. Estimated daily calorie need ──────────────────────────────────────
-    activity_factor = {
-        "No Exercise": 1.20,
-        "Light (walking, yoga)": 1.375,
-        "Moderate (jogging, cycling)": 1.55,
-        "Intense (running, gym, sports)": 1.725,
-    }.get(exercise_type, 1.20)
-    if exercise_type != "No Exercise" and exercise_duration_min >= 45:
-        activity_factor += 0.05  # small bonus for a genuinely long session today
+    try:
+        client = _genai.Client(api_key=api_key)
 
-    safe_age    = int(age) if age and age > 0 else 35
-    safe_gender = gender if gender in ("Male", "Female") else "Male"
-    bmr = _estimate_bmr(weight_kg, safe_age, safe_gender)
-    daily_calories = bmr * activity_factor
+        system_instruction = (
+            "You are a strict vegetarian diet assistant for an educational diabetes app. "
+            "Return only vegetarian food ideas. Do not include egg, chicken, fish, meat, or alcohol. "
+            "Keep the advice practical, India-friendly, and concise. "
+            "This is for educational use only and not medical advice."
+        )
 
-    # ── 2. Macro split based on diabetes status / risk ───────────────────────
-    if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
-        plan_label = "Low-Carb Vegetarian Plan"
-        carb_pct, protein_pct, fat_pct = 0.38, 0.27, 0.35
-    elif risk == "Medium Risk" or bmi_cat in ("Overweight", "Obese") or diabetes_type == "Prediabetes":
-        plan_label = "Moderate-Carb Vegetarian Plan"
-        carb_pct, protein_pct, fat_pct = 0.45, 0.23, 0.32
+        user_prompt = f"""
+Create a vegetarian AI diet recommendation plan for a person with:
+- Diabetes status: {diabetes_type}
+- BMI category: {bmi_cat}
+- Risk level: {risk}
+
+Rules:
+- Strictly vegetarian only
+- No egg, no meat, no fish
+- Keep food common and easy to find in India
+- Include breakfast, lunch, dinner, and 2 snacks
+- For each meal, give 2-3 options
+- Add portion guidance
+- Keep it readable and practical
+- Prefer low sugar, high fibre, balanced protein, and controlled carbs
+- Mention foods to limit or avoid
+- End with a short note that it is educational only
+"""
+
+        interaction = client.interactions.create(
+            model=GEMINI_MODEL,
+            system_instruction=system_instruction,
+            input=user_prompt,
+            generation_config={
+                "temperature": 0.6,
+            },
+        )
+
+        return interaction.output_text.strip()
+
+    except Exception as e:
+        return f"ERROR: {e}"
+
+
+def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
+    """Gemini-powered vegetarian diet plan with fallback."""
+    st.markdown("#### 🥗 Personalised AI Diet Plan")
+    st.caption("Generated using Gemini API and restricted to vegetarian foods only.")
+
+    plan_text = get_gemini_veg_diet_plan(diabetes_type, bmi_cat, risk)
+
+    if plan_text and not plan_text.startswith("ERROR:"):
+        st.success("✅ Gemini-generated vegetarian plan ready")
+        st.markdown(plan_text)
     else:
-        plan_label = "Balanced Vegetarian Plan"
-        carb_pct, protein_pct, fat_pct = 0.50, 0.20, 0.30
+        st.warning("Gemini API is not available, so showing the fallback vegetarian plan.")
 
-    daily_carbs_g   = (daily_calories * carb_pct) / 4
-    daily_protein_g = (daily_calories * protein_pct) / 4
-    daily_fat_g     = (daily_calories * fat_pct) / 9
+        # Vegetarian fallback
+        if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
+            plan_label = "Low-Carb Vegetarian Plan"
+            pool = [
+                k for k, v in FOOD_DB.items()
+                if v["carbs"] <= 15 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
+        elif risk == "Medium Risk" or bmi_cat in ("Overweight", "Obese"):
+            plan_label = "Moderate-Carb Vegetarian Plan"
+            pool = [
+                k for k, v in FOOD_DB.items()
+                if 8 <= v["carbs"] <= 25 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
+        else:
+            plan_label = "Balanced Vegetarian Plan"
+            pool = [
+                k for k in FOOD_DB.keys()
+                if all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
 
-    st.markdown(
-        f"**Plan Type:** {plan_label} &nbsp;|&nbsp; "
-        f"**Based on:** {diabetes_type}, {bmi_cat} BMI, {risk}"
-    )
-    col_t1, col_t2, col_t3, col_t4 = st.columns(4)
-    col_t1.metric("🔥 Daily Calories", f"{daily_calories:.0f} kcal")
-    col_t2.metric("🍞 Carb Target", f"{daily_carbs_g:.0f} g")
-    col_t3.metric("💪 Protein Target", f"{daily_protein_g:.0f} g")
-    col_t4.metric("🥑 Fat Target", f"{daily_fat_g:.0f} g")
-    st.caption("Targets are educational estimates (Mifflin-St Jeor BMR × activity level), not a prescribed diet.")
+        if not pool:
+            pool = list(FOOD_DB.keys())
 
-    # ── 3. Distribute targets across meals and fill from the veg pool ────────
-    meal_share = {
-        "🌅 Breakfast": 0.25,
-        "🍛 Lunch": 0.35,
-        "🌙 Dinner": 0.30,
-        "🍎 Snack": 0.10,
-    }
+        seed = abs(hash(st.session_state.get("user_key", "guest"))) % (2**32)
+        rng = np.random.default_rng(seed=seed)
 
-    pool_items = list(VEG_FOOD_DB.keys())
-    if not pool_items:
-        st.warning("No vegetarian items found in the food database.")
-        return
+        meal_slots = {
+            "🌅 Breakfast": 2,
+            "🍛 Lunch": 2,
+            "🌙 Dinner": 2,
+            "🍎 Snack": 1,
+        }
 
-    seed = abs(hash(st.session_state.get("user_key", "guest"))) % (2**32)
-    rng = np.random.default_rng(seed=seed)
+        st.markdown(f"**Plan Type:** {plan_label} &nbsp;|&nbsp; **Based on:** {diabetes_type}, {bmi_cat} BMI, {risk}")
 
-    used_items: set[str] = set()
-    daily_totals = {"calories": 0.0, "carbs": 0.0, "protein": 0.0, "fat": 0.0}
+        for meal, n in meal_slots.items():
+            n = min(n, len(pool))
+            items = rng.choice(pool, size=n, replace=False)
+            st.markdown(f"**{meal}**")
+            for it in items:
+                info = FOOD_DB[it]
+                st.markdown(
+                    f"- {it} — {info['calories']:.0f} kcal, "
+                    f"{info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein"
+                )
 
-    for meal, share in meal_share.items():
-        meal_cal_target = daily_calories * share
-        candidates = [it for it in pool_items if it not in used_items]
-        if not candidates:
-            candidates = pool_items  # only repeat if we've genuinely run out of unique items
-
-        candidates = list(candidates)
-        rng.shuffle(candidates)
-
-        chosen = []
-        running_cal = 0.0
-        for item in candidates:
-            if chosen and (running_cal >= meal_cal_target * 0.9 or len(chosen) >= 4):
-                break
-            chosen.append(item)
-            running_cal += VEG_FOOD_DB[item]["calories"]
-
-        if not chosen and candidates:
-            chosen = [candidates[0]]
-
-        used_items.update(chosen)
-
-        meal_cal   = sum(VEG_FOOD_DB[i]["calories"] for i in chosen)
-        meal_carbs = sum(VEG_FOOD_DB[i]["carbs"]    for i in chosen)
-        meal_prot  = sum(VEG_FOOD_DB[i]["protein"]  for i in chosen)
-        meal_fat   = sum(VEG_FOOD_DB[i]["fat"]      for i in chosen)
-        daily_totals["calories"] += meal_cal
-        daily_totals["carbs"]    += meal_carbs
-        daily_totals["protein"]  += meal_prot
-        daily_totals["fat"]      += meal_fat
-
-        st.markdown(f"**{meal}** — target ~{meal_cal_target:.0f} kcal, planned {meal_cal:.0f} kcal")
-        for item in chosen:
-            info = VEG_FOOD_DB[item]
-            st.markdown(f"- {item} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein, {info['fat']:.0f}g fat")
-
-    st.markdown("---")
-    st.markdown("**📊 Planned Daily Totals vs. Targets:**")
-    col_d1, col_d2, col_d3, col_d4 = st.columns(4)
-    col_d1.metric("🔥 Calories", f"{daily_totals['calories']:.0f}", f"target {daily_calories:.0f}")
-    col_d2.metric("🍞 Carbs", f"{daily_totals['carbs']:.0f} g", f"target {daily_carbs_g:.0f} g")
-    col_d3.metric("💪 Protein", f"{daily_totals['protein']:.0f} g", f"target {daily_protein_g:.0f} g")
-    col_d4.metric("🥑 Fat", f"{daily_totals['fat']:.0f} g", f"target {daily_fat_g:.0f} g")
-
-    st.info("💡 This is a rule-based educational suggestion built from your profile (weight, age, gender, activity, diabetes status) — not a clinical diet prescription. Consult a registered dietitian for a medically supervised plan.")
-
+        st.info("💡 Vegetarian fallback plan shown because Gemini was unavailable. It is educational only.")
 
 def render_mbti_calculator():
     """Simple 4-question MBTI-style personality self-assessment."""
@@ -2698,11 +2657,7 @@ def main():
             ["🥗 AI Diet Plan", "🧠 MBTI Calculator", "😴 Sleep Quality", "💆 Stress Assessment"]
         )
         with tab_diet:
-            render_diet_plan(
-                diabetes_type, bmi_cat, risk,
-                weight_kg=weight, age=age, gender=gender,
-                exercise_type=exercise_type, exercise_duration_min=exercise_duration_min,
-            )
+            render_diet_plan(diabetes_type, bmi_cat, risk)
         with tab_mbti:
             render_mbti_calculator()
         with tab_sleep:
