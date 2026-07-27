@@ -1834,7 +1834,7 @@ def get_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str
             "This is for educational use only and not medical advice."
         )
 
-    prompt = f"""You are a supportive vegetarian diet assistant for an educational diabetes app.
+prompt = f"""You are a supportive vegetarian diet assistant for an educational diabetes app.
 
 Patient snapshot:
 - Diabetes status: {diabetes_type}
