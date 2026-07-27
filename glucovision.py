@@ -25,11 +25,14 @@ from pathlib import Path
 # installed or no API key is configured, the app falls back to the original
 # rule-based recommendation engine instead of crashing.
 try:
-    from groq import Groq as _Groq
-    GROQ_SDK_AVAILABLE = True
+    from google import genai as _genai
+    GEMINI_SDK_AVAILABLE = True
 except ImportError:
-    _Groq = None
-    GROQ_SDK_AVAILABLE = False
+    GEMINI_SDK_AVAILABLE = False
+
+GEMINI_MODEL = "gemini-flash-latest"        # auto-updating alias for the newest stable Flash model
+GEMINI_MODEL_FALLBACK = "gemini-3.5-flash"  # pinned fallback if the alias ever changes/misbehaves
+
 # ─── ACCOUNT SYSTEM (freemium: free vs premium) ────────────────────────────────
 # NOTE: This is a lightweight local JSON "database" suitable for a prototype /
 # science-fair demo. It is NOT production-grade security (no HTTPS enforcement,
@@ -1811,241 +1814,174 @@ def three_month_trend_chart(dates, values) -> go.Figure:
 # ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
 
 # ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
-# ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
 
-def _diet_seed(*parts) -> int:
-    base = "|".join(str(p) for p in parts)
-    return abs(hash(base)) % (2**32)
+def get_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str:
+    """Generate a strict vegetarian diet plan using Gemini."""
+    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+    if not api_key or not GEMINI_SDK_AVAILABLE:
+        return ""
 
+    try:
+        client = _genai.Client(api_key=api_key)
 
-def _pick_unique(options: list[str], count: int, rng: np.random.Generator, used: set[str]) -> list[str]:
-    available = [x for x in options if x not in used]
-    if not available:
-        available = options[:]
-    if not available:
-        return []
-    count = min(count, len(available))
-    picks = list(rng.choice(available, size=count, replace=False))
-    used.update(picks)
-    return picks
+        system_instruction = (
+            "You are a strict vegetarian diet assistant for an educational diabetes app. "
+            "Return only vegetarian food ideas. Do not include egg, chicken, fish, meat, or alcohol. "
+            "Keep the advice practical, India-friendly, and concise. "
+            "This is for educational use only and not medical advice."
+        )
 
+        user_prompt = f"""
+Create a vegetarian AI diet recommendation plan for a person with:
+- Diabetes status: {diabetes_type}
+- BMI category: {bmi_cat}
+- Risk level: {risk}
 
-def _portion_note(bmi_cat: str, current_glucose: float, predicted_peak: float) -> str:
-    if current_glucose < 70:
-        return "Keep portions moderate and include one extra healthy carbohydrate serving if you feel weak."
-    if predicted_peak > 180 or current_glucose > 180:
-        return "Use smaller portions of rice/roti and build the plate around vegetables, dal, and protein."
-    if bmi_cat in ("Overweight", "Obese"):
-        return "Keep portions a little smaller and avoid second servings."
-    if bmi_cat == "Underweight":
-        return "You can include slightly fuller portions and add paneer, curd, nuts, or dal."
-    return "Follow normal household portions and eat slowly."
+Rules:
+- Strictly vegetarian only
+- No egg, no meat, no fish
+- Keep food common and easy to find in India
+- Include breakfast, lunch, dinner, and 2 snacks
+- For each meal, give 2-3 options
+- Add portion guidance
+- Keep it readable and practical
+- Prefer low sugar, high fibre, balanced protein, and controlled carbs
+- Mention foods to limit or avoid
+- End with a short note that it is educational only
+"""
 
+        interaction = client.interactions.create(
+            model=GEMINI_MODEL,
+            system_instruction=system_instruction,
+            input=user_prompt,
+            generation_config={
+                "temperature": 0.6,
+            },
+        )
 
-def _meal_plan_templates(current_glucose: float, predicted_peak: float, bmi_cat: str, diabetes_type: str, risk: str, rng: np.random.Generator) -> dict:
-    high_sugar = current_glucose > 180 or predicted_peak > 180 or risk == "High Risk"
-    low_sugar = current_glucose < 70
+        return interaction.output_text.strip()
 
-    breakfast_low = [
-        "Poha with peanuts + unsweetened tea",
-        "Idli with sambar",
-        "Vegetable upma",
-        "Banana with a few peanuts",
-        "Dalia porridge with milk",
-    ]
-    breakfast_mid = [
-        "Moong dal chilla + mint chutney",
-        "Vegetable oats porridge",
-        "Ragi dosa + sambar",
-        "Besan chilla with onion and coriander",
-        "Sprouts chaat + cucumber",
-    ]
-    breakfast_high = [
-        "Moong dal chilla + salad",
-        "Besan chilla + mint chutney",
-        "Vegetable oats with no sugar",
-        "Sprouts salad + curd",
-        "Ragi dosa with sambar",
-    ]
-
-    lunch_low = [
-        "2 phulkas + dal + vegetable sabzi + curd",
-        "Rice in a small portion + rajma + salad",
-        "Khichdi + curd + cucumber salad",
-        "2 chapatis + chole + mixed vegetable sabzi",
-        "Millet roti + dal + lauki sabzi",
-    ]
-    lunch_mid = [
-        "2 chapatis + moong dal + bhindi sabzi + salad",
-        "Brown rice + rajma + cucumber salad",
-        "2 phulkas + paneer bhurji + mixed vegetables",
-        "Jowar roti + dal + cabbage sabzi",
-        "Khichdi + curd + salad",
-    ]
-    lunch_high = [
-        "2 phulkas + moong dal + lauki sabzi + salad",
-        "1–2 chapatis + paneer/tofu + bhindi sabzi",
-        "Millet roti + dal + mixed vegetable sabzi",
-        "Khichdi with extra vegetables + curd",
-        "Chole with salad + 1–2 phulkas",
-    ]
-
-    dinner_low = [
-        "2 chapatis + dal + vegetable sabzi",
-        "Vegetable khichdi + curd",
-        "Paneer bhurji + 2 phulkas",
-        "Idli with sambar",
-        "Light veg soup + roti",
-    ]
-    dinner_mid = [
-        "1–2 chapatis + dal + lauki/bhindi sabzi",
-        "Vegetable soup + paneer/tofu + roti",
-        "Khichdi + curd + salad",
-        "Moong dal chilla + salad",
-        "Sambar + dosa (less oil)",
-    ]
-    dinner_high = [
-        "Vegetable soup + 1–2 chapatis + dal",
-        "Moong dal khichdi + curd",
-        "Paneer/tofu bhurji + salad",
-        "1–2 phulkas + lauki sabzi + dal",
-        "Sprouts salad + vegetable soup + 1 roti",
-    ]
-
-    snack_low = [
-        "1 banana or apple + a few nuts",
-        "Buttermilk + roasted chana",
-        "Fruit + peanuts",
-        "Milk without sugar + a few almonds",
-        "Curd with a small fruit serving",
-    ]
-    snack_mid = [
-        "Roasted chana",
-        "Buttermilk (chaas) without sugar",
-        "Cucumber and carrot sticks",
-        "A few almonds or walnuts",
-        "Sprouts chaat",
-    ]
-    snack_high = [
-        "Buttermilk without sugar",
-        "Roasted chana",
-        "Cucumber and carrot sticks",
-        "Sprouts chaat",
-        "Green tea + a few nuts",
-    ]
-
-    if low_sugar:
-        breakfast_pool, lunch_pool, dinner_pool, snack_pool = breakfast_low, lunch_low, dinner_low, snack_low
-    elif high_sugar:
-        breakfast_pool, lunch_pool, dinner_pool, snack_pool = breakfast_high, lunch_high, dinner_high, snack_high
-    else:
-        breakfast_pool, lunch_pool, dinner_pool, snack_pool = breakfast_mid, lunch_mid, dinner_mid, snack_mid
-
-    if bmi_cat in ("Overweight", "Obese"):
-        lunch_pool = [x for x in lunch_pool if "rice" not in x.lower() or "small" in x.lower()] or lunch_pool
-        dinner_pool = [x for x in dinner_pool if "khichdi" in x.lower() or "soup" in x.lower() or "salad" in x.lower()] or dinner_pool
-
-    if bmi_cat == "Underweight":
-        breakfast_pool = breakfast_pool + ["Paneer sandwich", "Curd with oats", "Milk + nuts"]
-        lunch_pool = lunch_pool + ["Paneer curry + chapati", "Dal + rice + curd", "Soybean curry + roti"]
-        dinner_pool = dinner_pool + ["Paneer + roti", "Dal + rice + curd"]
-
-    if diabetes_type == "Type 1 Diabetes":
-        lunch_pool = lunch_pool + ["Balanced carb meal with counted roti and dal"]
-        dinner_pool = dinner_pool + ["Balanced carb meal with counted roti and sabzi"]
-
-    used = set()
-    breakfast = _pick_unique(breakfast_pool, 3, rng, used)
-    lunch = _pick_unique(lunch_pool, 3, rng, used)
-    dinner = _pick_unique(dinner_pool, 3, rng, used)
-    snacks = _pick_unique(snack_pool, 2, rng, used)
-
-    avoid = []
-    if high_sugar:
-        avoid = [
-            "Sugary drinks, sweets, bakery items, and fruit juice",
-            "White rice in large portions, potatoes, and refined flour foods",
-            "Fried snacks like samosa, pakora, chips, and bhujia",
-        ]
-    elif low_sugar:
-        avoid = [
-            "Skipping meals",
-            "Long gaps without food",
-            "Large servings of sweets or sugary drinks",
-        ]
-    else:
-        avoid = [
-            "Sugary drinks and desserts",
-            "Excess fried snacks and packaged bakery foods",
-            "Refined flour foods eaten in large portions",
-        ]
-
-    plan_lines = []
-    plan_lines.append("## Breakfast")
-    for item in breakfast:
-        plan_lines.append(f"- {item}")
-
-    plan_lines.append("")
-    plan_lines.append("## Lunch")
-    for item in lunch:
-        plan_lines.append(f"- {item}")
-
-    plan_lines.append("")
-    plan_lines.append("## Dinner")
-    for item in dinner:
-        plan_lines.append(f"- {item}")
-
-    plan_lines.append("")
-    plan_lines.append("## Snacks")
-    for item in snacks:
-        plan_lines.append(f"- {item}")
-
-    plan_lines.append("")
-    plan_lines.append("## Foods to Avoid")
-    for item in avoid:
-        plan_lines.append(f"- {item}")
-
-    plan_lines.append("")
-    plan_lines.append("## Daily Tips")
-    plan_lines.append(f"- {_portion_note(bmi_cat, current_glucose, predicted_peak)}")
-    plan_lines.append("- Drink 2–3 litres of water through the day.")
-    plan_lines.append("- Walk for 10–20 minutes after meals if possible.")
-    plan_lines.append("- Keep meals vegetarian, home-style, and minimally processed.")
-
-    plan_lines.append("")
-    plan_lines.append("## Note")
-    plan_lines.append("- This plan is educational only and not a medical diet prescription.")
-
-    return "\n".join(plan_lines)
+    except Exception as e:
+        return f"ERROR: {e}"
 
 
-def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str, current_glucose: float, predicted_peak: float):
-    """Vegetarian Indian household diet plan that changes with sugar levels."""
+def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
+    """Gemini-powered vegetarian diet plan with fallback."""
     st.markdown("#### 🥗 Personalised AI Diet Plan")
-    st.caption("Strictly vegetarian, Indian household style, and adjusted to current glucose levels.")
+    st.caption("Generated using Gemini API and restricted to vegetarian foods only.")
 
-    seed = _diet_seed(
-        st.session_state.get("user_key", "guest"),
-        datetime.now().date().isoformat(),
-        round(current_glucose),
-        round(predicted_peak),
-        bmi_cat,
-        diabetes_type,
-        risk,
-    )
-    rng = np.random.default_rng(seed)
+    plan_text = get_gemini_veg_diet_plan(diabetes_type, bmi_cat, risk)
 
-    plan_text = _meal_plan_templates(
-        current_glucose=current_glucose,
-        predicted_peak=predicted_peak,
-        bmi_cat=bmi_cat,
-        diabetes_type=diabetes_type,
-        risk=risk,
-        rng=rng,
-    )
+    if plan_text and not plan_text.startswith("ERROR:"):
+        st.success("✅ Gemini-generated vegetarian plan ready")
+        st.markdown(plan_text)
+    else:
+        st.warning("Gemini API is not available, so showing the fallback vegetarian plan.")
 
-    st.success("✅ Vegetarian diet plan ready")
-    st.markdown(plan_text)
+        # Vegetarian fallback
+        if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
+            plan_label = "Low-Carb Vegetarian Plan"
+            pool = [
+                k for k, v in FOOD_DB.items()
+                if v["carbs"] <= 15 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
+        elif risk == "Medium Risk" or bmi_cat in ("Overweight", "Obese"):
+            plan_label = "Moderate-Carb Vegetarian Plan"
+            pool = [
+                k for k, v in FOOD_DB.items()
+                if 8 <= v["carbs"] <= 25 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
+        else:
+            plan_label = "Balanced Vegetarian Plan"
+            pool = [
+                k for k in FOOD_DB.keys()
+                if all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
+            ]
+
+        if not pool:
+            pool = list(FOOD_DB.keys())
+
+        seed = abs(hash(st.session_state.get("user_key", "guest"))) % (2**32)
+        rng = np.random.default_rng(seed=seed)
+
+        meal_slots = {
+            "🌅 Breakfast": 2,
+            "🍛 Lunch": 2,
+            "🌙 Dinner": 2,
+            "🍎 Snack": 1,
+        }
+
+        st.markdown(f"**Plan Type:** {plan_label} &nbsp;|&nbsp; **Based on:** {diabetes_type}, {bmi_cat} BMI, {risk}")
+
+        for meal, n in meal_slots.items():
+            n = min(n, len(pool))
+            items = rng.choice(pool, size=n, replace=False)
+            st.markdown(f"**{meal}**")
+            for it in items:
+                info = FOOD_DB[it]
+                st.markdown(
+                    f"- {it} — {info['calories']:.0f} kcal, "
+                    f"{info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein"
+                )
+
+        st.info("💡 Vegetarian fallback plan shown because Gemini was unavailable. It is educational only.")
+
+def render_mbti_calculator():
+    """Simple 4-question MBTI-style personality self-assessment."""
+    st.markdown("#### 🧠 MBTI Personality Calculator")
+    st.caption("Understanding your personality style can help tailor how you approach health routines.")
+
+    q1 = st.radio("At a party, you tend to:",
+                  ["Mingle with lots of people (E)", "Stick with a few close friends (I)"], key="mbti_q1")
+    q2 = st.radio("You prefer information that is:",
+                  ["Concrete and factual (S)", "Abstract and theoretical (N)"], key="mbti_q2")
+    q3 = st.radio("When deciding, you rely more on:",
+                  ["Logic and consistency (T)", "Values and people impact (F)"], key="mbti_q3")
+    q4 = st.radio("You prefer your days to be:",
+                  ["Planned and structured (J)", "Flexible and spontaneous (P)"], key="mbti_q4")
+
+    if st.button("🔮 Calculate My MBTI Type", key="mbti_calc_btn"):
+        mbti = ("E" if "(E)" in q1 else "I") + ("S" if "(S)" in q2 else "N") + \
+               ("T" if "(T)" in q3 else "F") + ("J" if "(J)" in q4 else "P")
+        trait_desc = {
+            "E": "outgoing, energised by others", "I": "reflective, energised by solitude",
+            "S": "detail-oriented and practical", "N": "idea-driven and big-picture",
+            "T": "logical and objective", "F": "empathetic and values-driven",
+            "J": "structured and routine-loving", "P": "flexible and spontaneous",
+        }
+        st.success(f"### Your Type: {mbti}")
+        st.write(", ".join(trait_desc[c] for c in mbti).capitalize() + ".")
+        tip = ("Structured types often do well with fixed meal and medication schedules — "
+               "try recurring reminders." if mbti[3] == "J" else
+               "Flexible types may do better pairing glucose checks with an existing daily "
+               "habit, rather than a rigid schedule.")
+        st.info(f"💡 Wellness tip: {tip}")
+
+
+def render_sleep_quality():
+    """Sleep quality score — sleep affects insulin sensitivity and glucose control."""
+    st.markdown("#### 😴 Sleep Quality Analyzer")
+    st.caption("Sleep quality strongly affects insulin sensitivity and glucose control.")
+
+    hours     = st.slider("Average hours of sleep per night", 0.0, 12.0, 7.0, 0.5, key="sleep_hours")
+    wakeups   = st.number_input("Times you wake up during the night", 0, 10, 1, key="sleep_wakeups")
+    refreshed = st.slider("How refreshed do you feel on waking? (1=Exhausted, 10=Fully Refreshed)",
+                          1, 10, 6, key="sleep_refreshed")
+
+    if st.button("💤 Calculate Sleep Score", key="sleep_calc_btn"):
+        score = 100.0
+        if hours < 6 or hours > 9: score -= 25
+        elif hours < 7 or hours > 8.5: score -= 10
+        score -= wakeups * 6
+        score += (refreshed - 5) * 4
+        score = max(0, min(100, round(score)))
+
+        st.metric("😴 Sleep Quality Score", f"{score}/100")
+        if score >= 75:
+            st.success("✅ Good sleep quality. Consistent sleep supports stable glucose levels.")
+        elif score >= 50:
+            st.warning("⚠️ Moderate sleep quality. A consistent bedtime and less screen time before bed may help.")
+        else:
             st.error("🚨 Poor sleep quality detected. Sleep deprivation can raise insulin resistance — consider consulting a doctor if this persists.")
 
 
