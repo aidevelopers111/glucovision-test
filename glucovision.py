@@ -1820,7 +1820,9 @@ def three_month_trend_chart(dates, values) -> go.Figure:
 
 def get_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str:
     """Generate a strict vegetarian diet plan using Gemini."""
+
     api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
+
     if not api_key or not GEMINI_SDK_AVAILABLE:
         return ""
 
@@ -1828,247 +1830,41 @@ def get_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str
         client = _genai.Client(api_key=api_key)
 
         system_instruction = (
-            "You are a strict vegetarian diet assistant for an educational diabetes app. "
-            "Return only vegetarian food ideas. Do not include egg, chicken, fish, meat, or alcohol. "
-            "Keep the advice practical, India-friendly, and concise. "
-            "This is for educational use only and not medical advice."
+            "You are a supportive vegetarian diet assistant for an educational diabetes app. "
+            "Return ONLY vegetarian meal suggestions. "
+            "Never recommend egg, chicken, fish, meat, seafood or alcohol. "
+            "Keep the advice India-friendly, practical, and educational."
         )
 
-prompt = f"""You are a supportive vegetarian diet assistant for an educational diabetes app.
+        prompt = f"""
+Patient Snapshot
+----------------
+Diabetes Status: {diabetes_type}
+BMI Category: {bmi_cat}
+Risk Level: {risk}
 
-Patient snapshot:
-- Diabetes status: {diabetes_type}
-- BMI category: {bmi_cat}
-- Risk level: {risk}
+Generate a personalised vegetarian diet plan.
 
-Return the answer in EXACTLY this format:
-
-## Breakfast
-- Option 1: ...
-- Option 2: ...
-- Option 3: ...
-
-## Lunch
-- Option 1: ...
-- Option 2: ...
-- Option 3: ...
-
-## Dinner
-- Option 1: ...
-- Option 2: ...
-- Option 3: ...
-
-## Snacks
-- Option 1: ...
-- Option 2: ...
-
-## Foods to Avoid
-- ...
-- ...
-- ...
-
-## Note
-One short educational disclaimer.
-
-Rules:
-- Strictly vegetarian only
-- No egg, no chicken, no fish, no meat, no alcohol
-- India-friendly and easy to follow
-- Use bullet points only
-- Do not write paragraphs
-- Do not add anything outside the format above
-- Keep it concise and clean
-"""
-
-        interaction = client.interactions.create(
-            model=GEMINI_MODEL,
-            system_instruction=system_instruction,
-            input=user_prompt,
-            generation_config={
-                "temperature": 0.6,
-            },
-        )
-
-        return interaction.output_text.strip()
-
-    except Exception as e:
-        return f"ERROR: {e}"
-
-
-def _get_groq_api_key() -> str | None:
-    """
-    Look for a Groq API key in:
-      1. Streamlit secrets (st.secrets["GROQ_API_KEY"])
-      2. Environment variable GROQ_API_KEY
-    """
-    try:
-        if "GROQ_API_KEY" in st.secrets:
-            return st.secrets["GROQ_API_KEY"]
-    except Exception:
-        pass
-    return os.environ.get("GROQ_API_KEY")
-
-
-def _get_groq_api_key() -> str | None:
-    """
-    Look for a Groq API key in:
-      1. Streamlit secrets (st.secrets["GROQ_API_KEY"])
-      2. Environment variable GROQ_API_KEY
-    """
-    try:
-        if "GROQ_API_KEY" in st.secrets:
-            return st.secrets["GROQ_API_KEY"]
-    except Exception:
-        pass
-    return os.environ.get("GROQ_API_KEY")
-
-
-def _is_vegetarian_food(name: str) -> bool:
-    bad_words = [
-        "chicken", "fish", "mutton", "egg", "prawn", "shrimp", "tuna",
-        "salmon", "duck", "turkey", "meat", "liver", "crab", "sardine"
-    ]
-    lower = name.lower()
-    return not any(w in lower for w in bad_words)
-
-
-def _pick_foods(pool: list[str], count: int, seed: int) -> list[str]:
-    if not pool:
-        return []
-    rng = np.random.default_rng(seed)
-    count = min(count, len(pool))
-    return list(rng.choice(pool, size=count, replace=False))
-
-
-def _build_fallback_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str:
-    """
-    Always returns a clean, structured vegetarian plan with headings and bullets.
-    """
-    seed = abs(hash((diabetes_type, bmi_cat, risk, st.session_state.get("user_key", "guest")))) % (2**32)
-
-    breakfast_pool = [
-        k for k in FOOD_DB.keys()
-        if _is_vegetarian_food(k) and any(x in k.lower() for x in [
-            "oats", "idli", "dosa", "poha", "upma", "dalia", "sprouts", "curd", "yogurt",
-            "millet", "ragi", "jowar", "bajra", "fruit", "apple", "papaya", "guava", "banana"
-        ])
-    ]
-    lunch_pool = [
-        k for k in FOOD_DB.keys()
-        if _is_vegetarian_food(k) and any(x in k.lower() for x in [
-            "roti", "chapati", "dal", "rajma", "chole", "sabzi", "paneer", "curd",
-            "rice", "khichdi", "quinoa", "millet", "sambar", "rasam"
-        ])
-    ]
-    dinner_pool = [
-        k for k in FOOD_DB.keys()
-        if _is_vegetarian_food(k) and any(x in k.lower() for x in [
-            "roti", "chapati", "dal", "sabzi", "paneer", "tofu", "curd",
-            "khichdi", "millet", "sambar", "rasam", "quinoa"
-        ])
-    ]
-    snack_pool = [
-        k for k in FOOD_DB.keys()
-        if _is_vegetarian_food(k) and any(x in k.lower() for x in [
-            "apple", "papaya", "guava", "orange", "pear", "kiwi", "pomegranate",
-            "nuts", "almonds", "peanuts", "buttermilk", "chaas", "sprouts", "cucumber", "carrot"
-        ])
-    ]
-
-    breakfast = _pick_foods(breakfast_pool, 3, seed + 1)
-    lunch = _pick_foods(lunch_pool, 3, seed + 2)
-    dinner = _pick_foods(dinner_pool, 3, seed + 3)
-    snacks = _pick_foods(snack_pool, 2, seed + 4)
-
-    # Build a format that always stays clean and easy to read
-    lines = []
-    lines.append("## Breakfast")
-    for item in breakfast:
-        info = FOOD_DB[item]
-        lines.append(f"- {item} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
-
-    lines.append("")
-    lines.append("## Lunch")
-    for item in lunch:
-        info = FOOD_DB[item]
-        lines.append(f"- {item} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
-
-    lines.append("")
-    lines.append("## Dinner")
-    for item in dinner:
-        info = FOOD_DB[item]
-        lines.append(f"- {item} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
-
-    lines.append("")
-    lines.append("## Snacks")
-    for item in snacks:
-        info = FOOD_DB[item]
-        lines.append(f"- {item} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
-
-    lines.append("")
-    lines.append("## Foods to Avoid")
-    if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
-        avoid_list = [
-            "Sugary drinks, sweets, fried snacks, white bread, excess rice portions",
-            "Deep-fried foods, packaged chips, and sugary desserts",
-            "Large portions of high-carb foods in one meal",
-        ]
-    else:
-        avoid_list = [
-            "Sugary drinks and desserts",
-            "Excess fried snacks and refined flour foods",
-            "Oversized portions of rice, roti, and potatoes",
-        ]
-    for item in avoid_list:
-        lines.append(f"- {item}")
-
-    lines.append("")
-    lines.append("## Note")
-    lines.append("- This plan is educational only.")
-    lines.append("- For a medical diet plan, consult a registered dietitian or doctor.")
-
-    return "\n".join(lines)
-
-
-def generate_groq_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> tuple[str | None, str | None]:
-    """
-    Ask Groq for a vegetarian diet plan based on the user's health data.
-    Returns (plan_text, error_message).
-    """
-    if not GROQ_SDK_AVAILABLE:
-        return None, "The groq package isn't installed."
-
-    api_key = _get_groq_api_key()
-    if not api_key:
-        return None, "No Groq API key configured (set GROQ_API_KEY in Streamlit secrets)."
-
-    prompt = f"""You are a supportive vegetarian diet assistant for an educational diabetes app.
-
-Patient snapshot:
-- Diabetes status: {diabetes_type}
-- BMI category: {bmi_cat}
-- Risk level: {risk}
-
-Return the answer in EXACTLY this markdown format:
+Return ONLY in this format:
 
 ## Breakfast
-- Option 1: ...
-- Option 2: ...
-- Option 3: ...
+- Option 1
+- Option 2
+- Option 3
 
 ## Lunch
-- Option 1: ...
-- Option 2: ...
-- Option 3: ...
+- Option 1
+- Option 2
+- Option 3
 
 ## Dinner
-- Option 1: ...
-- Option 2: ...
-- Option 3: ...
+- Option 1
+- Option 2
+- Option 3
 
 ## Snacks
-- Option 1: ...
-- Option 2: ...
+- Option 1
+- Option 2
 
 ## Foods to Avoid
 - ...
@@ -2079,61 +1875,31 @@ Return the answer in EXACTLY this markdown format:
 - One short educational disclaimer.
 
 Rules:
-- Strictly vegetarian only
-- No egg, no chicken, no fish, no meat, no alcohol
-- India-friendly and easy to follow
-- Appropriate for diabetes management
+- Vegetarian only
+- No egg
+- No chicken
+- No fish
+- No meat
+- No alcohol
+- Diabetes-friendly
+- India-friendly
 - Use bullet points only
-- Do not write paragraphs
-- Do not add anything outside the format above
-- Keep it concise and clean
+- Do not write paragraphs.
 """
 
-    try:
-        client = _Groq(api_key=api_key)
-        completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
-            messages=[
-                {
-                    "role": "system",
-                    "content": "You create safe, vegetarian, educational diet plans in strict markdown format."
-                },
-                {"role": "user", "content": prompt},
-            ],
-            temperature=0.2,
-            top_p=0.9,
+        response = client.models.generate_content(
+            model=GEMINI_MODEL,
+            contents=prompt,
+            config={
+                "system_instruction": system_instruction,
+                "temperature": 0.6,
+            },
         )
 
-        text = completion.choices[0].message.content.strip()
-        if not text:
-            return None, "Groq returned an empty response."
-
-        # Light cleanup so the output stays in the requested structure
-        text = text.replace("•", "-").strip()
-        if "## Breakfast" not in text:
-            text = _build_fallback_veg_diet_plan(diabetes_type, bmi_cat, risk)
-
-        return text, None
+        return response.text.strip()
 
     except Exception as e:
-        return None, f"Groq request failed: {e}"
-
-
-def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
-    """Groq-powered vegetarian diet plan with structured fallback."""
-    st.markdown("#### 🥗 Personalised AI Diet Plan")
-    st.caption("Generated using Groq API and restricted to vegetarian foods only.")
-
-    plan_text, plan_error = generate_groq_diet_plan(diabetes_type, bmi_cat, risk)
-
-    if plan_text:
-        st.success("✅ Groq-generated vegetarian plan ready")
-        st.markdown(plan_text)
-    else:
-        st.warning(f"Groq is unavailable ({plan_error}) — showing the fallback vegetarian plan.")
-        fallback_plan = _build_fallback_veg_diet_plan(diabetes_type, bmi_cat, risk)
-        st.markdown(fallback_plan)
-        st.info("💡 Vegetarian fallback plan shown because Groq was unavailable. It is educational only.")
+        return f"ERROR: {str(e)}"
 
 def render_sleep_quality():
     """Sleep quality score — sleep affects insulin sensitivity and glucose control."""
