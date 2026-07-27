@@ -1834,23 +1834,50 @@ def get_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str
             "This is for educational use only and not medical advice."
         )
 
-        user_prompt = f"""
-Create a vegetarian AI diet recommendation plan for a person with:
+    prompt = f"""You are a supportive vegetarian diet assistant for an educational diabetes app.
+
+Patient snapshot:
 - Diabetes status: {diabetes_type}
 - BMI category: {bmi_cat}
 - Risk level: {risk}
 
+Return the answer in EXACTLY this format:
+
+## Breakfast
+- Option 1: ...
+- Option 2: ...
+- Option 3: ...
+
+## Lunch
+- Option 1: ...
+- Option 2: ...
+- Option 3: ...
+
+## Dinner
+- Option 1: ...
+- Option 2: ...
+- Option 3: ...
+
+## Snacks
+- Option 1: ...
+- Option 2: ...
+
+## Foods to Avoid
+- ...
+- ...
+- ...
+
+## Note
+One short educational disclaimer.
+
 Rules:
 - Strictly vegetarian only
-- No egg, no meat, no fish
-- Keep food common and easy to find in India
-- Include breakfast, lunch, dinner, and 2 snacks
-- For each meal, give 2-3 options
-- Add portion guidance
-- Keep it readable and practical
-- Prefer low sugar, high fibre, balanced protein, and controlled carbs
-- Mention foods to limit or avoid
-- End with a short note that it is educational only
+- No egg, no chicken, no fish, no meat, no alcohol
+- India-friendly and easy to follow
+- Use bullet points only
+- Do not write paragraphs
+- Do not add anything outside the format above
+- Keep it concise and clean
 """
 
         interaction = client.interactions.create(
