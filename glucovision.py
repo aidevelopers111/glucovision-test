@@ -1865,20 +1865,82 @@ Rules:
         return f"ERROR: {e}"
 
 
+def _get_groq_api_key() -> str | None:
+    """
+    Look for a Groq API key in:
+      1. Streamlit secrets (st.secrets["GROQ_API_KEY"])
+      2. Environment variable GROQ_API_KEY
+    """
+    try:
+        if "GROQ_API_KEY" in st.secrets:
+            return st.secrets["GROQ_API_KEY"]
+    except Exception:
+        pass
+    return os.environ.get("GROQ_API_KEY")
+
+
+def generate_groq_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> tuple[str | None, str | None]:
+    """
+    Ask Groq for a vegetarian diet plan based on the user's health data.
+    Returns (plan_text, error_message).
+    """
+    if not GROQ_SDK_AVAILABLE:
+        return None, "The groq package isn't installed."
+
+    api_key = _get_groq_api_key()
+    if not api_key:
+        return None, "No Groq API key configured (set GROQ_API_KEY in Streamlit secrets)."
+
+    prompt = f"""You are a supportive vegetarian diet assistant for an educational diabetes app.
+
+Patient snapshot:
+- Diabetes status: {diabetes_type}
+- BMI category: {bmi_cat}
+- Risk level: {risk}
+
+Write a practical vegetarian diet plan that is:
+- Strictly vegetarian
+- No egg, no chicken, no fish, no meat, no alcohol
+- India-friendly and easy to follow
+- Appropriate for diabetes management
+- 5 sections: breakfast, lunch, dinner, snacks, foods to avoid
+- Include portion guidance and simple meal examples
+- Keep it concise and readable
+- End with a short educational disclaimer
+
+Return only the diet plan text. No numbering header is required."""
+
+    try:
+        client = _Groq(api_key=api_key)
+        completion = client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[
+                {"role": "system", "content": "You create safe, vegetarian, educational diet plans."},
+                {"role": "user", "content": prompt},
+            ],
+            temperature=0.6,
+        )
+        text = completion.choices[0].message.content.strip()
+        if not text:
+            return None, "Groq returned an empty response."
+        return text, None
+    except Exception as e:
+        return None, f"Groq request failed: {e}"
+
+
 def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
-    """Gemini-powered vegetarian diet plan with fallback."""
+    """Groq-powered vegetarian diet plan with fallback."""
     st.markdown("#### 🥗 Personalised AI Diet Plan")
-    st.caption("Generated using Gemini API and restricted to vegetarian foods only.")
+    st.caption("Generated using Groq API and restricted to vegetarian foods only.")
 
-    plan_text = get_gemini_veg_diet_plan(diabetes_type, bmi_cat, risk)
+    plan_text, plan_error = generate_groq_diet_plan(diabetes_type, bmi_cat, risk)
 
-    if plan_text and not plan_text.startswith("ERROR:"):
-        st.success("✅ Gemini-generated vegetarian plan ready")
+    if plan_text:
+        st.success("✅ Groq-generated vegetarian plan ready")
         st.markdown(plan_text)
     else:
-        st.warning("Gemini API is not available, so showing the fallback vegetarian plan.")
+        st.warning(f"Groq is unavailable ({plan_error}) — showing the fallback vegetarian plan.")
 
-        # Vegetarian fallback
         if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
             plan_label = "Low-Carb Vegetarian Plan"
             pool = [
@@ -1924,7 +1986,7 @@ def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
                     f"{info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein"
                 )
 
-        st.info("💡 Vegetarian fallback plan shown because Gemini was unavailable. It is educational only.")
+        st.info("💡 Vegetarian fallback plan shown because Groq was unavailable. It is educational only.")
 
 def render_mbti_calculator():
     """Simple 4-question MBTI-style personality self-assessment."""
