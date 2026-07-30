@@ -563,456 +563,6 @@ FOOD_DB = {
     "Gulab Jamun (2 pieces (80 g))": {"calories": 300.0, "carbs": 40.0, "protein": 4.0, "fat": 14.0},
     "Jalebi (100 g)": {"calories": 350.0, "carbs": 60.0, "protein": 2.0, "fat": 12.0},
     "Kheer (1 bowl (150 g))": {"calories": 230.0, "carbs": 35.0, "protein": 5.0, "fat": 8.0},
-    "Quinoa (cooked) (100 g)": {"calories": 120.0, "carbs": 21.3, "protein": 4.4, "fat": 1.9},
-"Barley (cooked) (100 g)": {"calories": 123.0, "carbs": 28.2, "protein": 2.3, "fat": 0.4},
-"Pearl Millet / Bajra (cooked) (100 g)": {"calories": 119.0, "carbs": 23.7, "protein": 3.5, "fat": 1.0},
-"Finger Millet / Ragi (cooked) (100 g)": {"calories": 119.0, "carbs": 24.0, "protein": 3.3, "fat": 1.3},
-"Jowar (cooked) (100 g)": {"calories": 123.0, "carbs": 25.0, "protein": 3.8, "fat": 1.1},
-"Foxtail Millet (cooked) (100 g)": {"calories": 119.0, "carbs": 23.5, "protein": 4.0, "fat": 1.2},
-"Little Millet (cooked) (100 g)": {"calories": 114.0, "carbs": 22.0, "protein": 3.6, "fat": 0.8},
-"Kodo Millet (cooked) (100 g)": {"calories": 112.0, "carbs": 21.8, "protein": 3.4, "fat": 0.8},
-"Barnyard Millet (cooked) (100 g)": {"calories": 118.0, "carbs": 23.0, "protein": 3.8, "fat": 0.9},
-"Broken Wheat / Dalia (cooked) (100 g)": {"calories": 83.0, "carbs": 18.6, "protein": 3.1, "fat": 0.2},
-
-"Black Gram / Urad Dal (cooked) (100 g)": {"calories": 116.0, "carbs": 20.4, "protein": 8.9, "fat": 0.6},
-"Masoor Dal (cooked) (100 g)": {"calories": 116.0, "carbs": 20.1, "protein": 9.0, "fat": 0.4},
-"Black Chana (cooked) (100 g)": {"calories": 164.0, "carbs": 27.4, "protein": 8.9, "fat": 2.6},
-"Soybeans (boiled) (100 g)": {"calories": 173.0, "carbs": 9.9, "protein": 18.2, "fat": 9.0},
-"Tofu (firm) (100 g)": {"calories": 144.0, "carbs": 2.8, "protein": 17.3, "fat": 8.7},
-"Tempeh (100 g)": {"calories": 193.0, "carbs": 9.4, "protein": 20.3, "fat": 10.8},
-
-"Greek Yogurt (plain) (100 g)": {"calories": 59.0, "carbs": 3.6, "protein": 10.0, "fat": 0.4},
-"Low Fat Milk (100 ml)": {"calories": 42.0, "carbs": 5.0, "protein": 3.4, "fat": 1.0},
-"Skim Milk (100 ml)": {"calories": 34.0, "carbs": 5.0, "protein": 3.4, "fat": 0.1},
-"Cheddar Cheese (100 g)": {"calories": 403.0, "carbs": 1.3, "protein": 24.9, "fat": 33.1},
-"Mozzarella Cheese (100 g)": {"calories": 280.0, "carbs": 3.1, "protein": 28.0, "fat": 17.0},
-
-"Turkey Breast (cooked) (100 g)": {"calories": 135.0, "carbs": 0.0, "protein": 29.0, "fat": 1.6},
-"Duck (roasted) (100 g)": {"calories": 337.0, "carbs": 0.0, "protein": 19.0, "fat": 28.0},
-"Chicken Liver (cooked) (100 g)": {"calories": 167.0, "carbs": 1.1, "protein": 24.5, "fat": 6.5},
-"Tuna (cooked) (100 g)": {"calories": 132.0, "carbs": 0.0, "protein": 29.9, "fat": 0.6},
-"Salmon (cooked) (100 g)": {"calories": 206.0, "carbs": 0.0, "protein": 22.1, "fat": 12.4},
-"Sardines (100 g)": {"calories": 208.0, "carbs": 0.0, "protein": 24.6, "fat": 11.5},
-"Crab (cooked) (100 g)": {"calories": 97.0, "carbs": 0.0, "protein": 20.1, "fat": 1.5},
-"Shrimp (cooked) (100 g)": {"calories": 99.0, "carbs": 0.2, "protein": 24.0, "fat": 0.3},
-
-"Broccoli (100 g)": {"calories": 34.0, "carbs": 6.6, "protein": 2.8, "fat": 0.4},
-"Beetroot (100 g)": {"calories": 43.0, "carbs": 9.6, "protein": 1.6, "fat": 0.2},
-"Capsicum (Green) (100 g)": {"calories": 20.0, "carbs": 4.6, "protein": 0.9, "fat": 0.2},
-"Red Bell Pepper (100 g)": {"calories": 31.0, "carbs": 6.0, "protein": 1.0, "fat": 0.3},
-"Yellow Bell Pepper (100 g)": {"calories": 27.0, "carbs": 6.3, "protein": 1.0, "fat": 0.2},
-"Zucchini (100 g)": {"calories": 17.0, "carbs": 3.1, "protein": 1.2, "fat": 0.3},
-"Pumpkin (100 g)": {"calories": 26.0, "carbs": 6.5, "protein": 1.0, "fat": 0.1},
-"Sweet Corn (boiled) (100 g)": {"calories": 96.0, "carbs": 21.0, "protein": 3.4, "fat": 1.5},
-"Mushrooms (100 g)": {"calories": 22.0, "carbs": 3.3, "protein": 3.1, "fat": 0.3},
-"Drumstick (Moringa Pods) (100 g)": {"calories": 37.0, "carbs": 8.5, "protein": 2.1, "fat": 0.2},
-"Radish (100 g)": {"calories": 16.0, "carbs": 3.4, "protein": 0.7, "fat": 0.1},
-"Turnip (100 g)": {"calories": 28.0, "carbs": 6.4, "protein": 0.9, "fat": 0.1},
-"Bottle Gourd (raw) (100 g)": {"calories": 15.0, "carbs": 3.7, "protein": 0.6, "fat": 0.1},
-"Ridge Gourd (100 g)": {"calories": 20.0, "carbs": 4.4, "protein": 0.7, "fat": 0.2},
-"Snake Gourd (100 g)": {"calories": 18.0, "carbs": 4.3, "protein": 0.5, "fat": 0.2},
-"Fenugreek Leaves (100 g)": {"calories": 43.0, "carbs": 6.0, "protein": 4.4, "fat": 0.9},
-"Coriander Leaves (100 g)": {"calories": 23.0, "carbs": 3.7, "protein": 2.1, "fat": 0.5},
-"Mint Leaves (100 g)": {"calories": 44.0, "carbs": 8.4, "protein": 3.3, "fat": 0.7},
-
-"Guava (100 g)": {"calories": 68.0, "carbs": 14.3, "protein": 2.6, "fat": 1.0},
-"Pineapple (100 g)": {"calories": 50.0, "carbs": 13.1, "protein": 0.5, "fat": 0.1},
-"Grapes (100 g)": {"calories": 69.0, "carbs": 18.1, "protein": 0.7, "fat": 0.2},
-"Watermelon (100 g)": {"calories": 30.0, "carbs": 7.6, "protein": 0.6, "fat": 0.2},
-"Muskmelon (100 g)": {"calories": 34.0, "carbs": 8.2, "protein": 0.8, "fat": 0.2},
-"Pear (100 g)": {"calories": 57.0, "carbs": 15.2, "protein": 0.4, "fat": 0.1},
-"Kiwi (100 g)": {"calories": 61.0, "carbs": 14.7, "protein": 1.1, "fat": 0.5},
-"Pomegranate (100 g)": {"calories": 83.0, "carbs": 18.7, "protein": 1.7, "fat": 1.2},
-"Lychee (100 g)": {"calories": 66.0, "carbs": 16.5, "protein": 0.8, "fat": 0.4},
-"Strawberries (100 g)": {"calories": 32.0, "carbs": 7.7, "protein": 0.7, "fat": 0.3},
-"Blueberries (100 g)": {"calories": 57.0, "carbs": 14.5, "protein": 0.7, "fat": 0.3},
-"Raspberries (100 g)": {"calories": 52.0, "carbs": 11.9, "protein": 1.2, "fat": 0.7},
-"Blackberries (100 g)": {"calories": 43.0, "carbs": 9.6, "protein": 1.4, "fat": 0.5},
-"Avocado (100 g)": {"calories": 160.0, "carbs": 8.5, "protein": 2.0, "fat": 14.7},
-"Dates (100 g)": {"calories": 282.0, "carbs": 75.0, "protein": 2.5, "fat": 0.4},
-"Raisins (100 g)": {"calories": 299.0, "carbs": 79.0, "protein": 3.1, "fat": 0.5},
-
-"Pistachios (100 g)": {"calories": 562.0, "carbs": 28.0, "protein": 20.2, "fat": 45.4},
-"Hazelnuts (100 g)": {"calories": 628.0, "carbs": 16.7, "protein": 15.0, "fat": 60.8},
-"Pecans (100 g)": {"calories": 691.0, "carbs": 13.9, "protein": 9.2, "fat": 72.0},
-"Macadamia Nuts (100 g)": {"calories": 718.0, "carbs": 13.8, "protein": 7.9, "fat": 75.8},
-"Walnuts (100 g)": {"calories": 654.0, "carbs": 13.7, "protein": 15.2, "fat": 65.2},
-"Pumpkin Seeds (100 g)": {"calories": 559.0, "carbs": 10.7, "protein": 30.2, "fat": 49.0},
-"Sunflower Seeds (100 g)": {"calories": 584.0, "carbs": 20.0, "protein": 20.8, "fat": 51.5},
-"Chia Seeds (100 g)": {"calories": 486.0, "carbs": 42.1, "protein": 16.5, "fat": 30.7},
-"Flax Seeds (100 g)": {"calories": 534.0, "carbs": 28.9, "protein": 18.3, "fat": 42.2},
-"Sesame Seeds (100 g)": {"calories": 573.0, "carbs": 23.4, "protein": 17.7, "fat": 49.7},
-
-"Olive Oil (100 g)": {"calories": 884.0, "carbs": 0.0, "protein": 0.0, "fat": 100.0},
-"Sunflower Oil (100 g)": {"calories": 884.0, "carbs": 0.0, "protein": 0.0, "fat": 100.0},
-"Mustard Oil (100 g)": {"calories": 884.0, "carbs": 0.0, "protein": 0.0, "fat": 100.0},
-"Coconut Oil (100 g)": {"calories": 892.0, "carbs": 0.0, "protein": 0.0, "fat": 100.0},
-
-"Peanut Butter (100 g)": {"calories": 588.0, "carbs": 20.0, "protein": 25.0, "fat": 50.0},
-"Dark Chocolate (70%) (100 g)": {"calories": 598.0, "carbs": 46.0, "protein": 7.8, "fat": 43.0},
-"Honey (100 g)": {"calories": 304.0, "carbs": 82.4, "protein": 0.3, "fat": 0.0},
-"Jam (100 g)": {"calories": 250.0, "carbs": 65.0, "protein": 0.3, "fat": 0.1},
-"Ketchup (100 g)": {"calories": 112.0, "carbs": 27.0, "protein": 1.3, "fat": 0.2},
-"Mayonnaise (100 g)": {"calories": 680.0, "carbs": 1.0, "protein": 1.0, "fat": 75.0},
-"Hummus (100 g)": {"calories": 166.0, "carbs": 14.3, "protein": 7.9, "fat": 9.6},
-"Veg Burger (1 burger (~180 g))": {"calories": 420.0, "carbs": 48.0, "protein": 12.0, "fat": 20.0},
-"Cheese Burger (Veg) (1 burger (~200 g))": {"calories": 510.0, "carbs": 47.0, "protein": 18.0, "fat": 28.0},
-"Paneer Burger (1 burger (~200 g))": {"calories": 480.0, "carbs": 45.0, "protein": 19.0, "fat": 24.0},
-"Aloo Tikki Burger (1 burger)": {"calories": 340.0, "carbs": 45.0, "protein": 8.0, "fat": 14.0},
-"Mexican Veg Burger (1 burger)": {"calories": 430.0, "carbs": 46.0, "protein": 13.0, "fat": 21.0},
-
-"Margherita Pizza (1 slice)": {"calories": 270.0, "carbs": 33.0, "protein": 12.0, "fat": 10.0},
-"Veggie Pizza (1 slice)": {"calories": 285.0, "carbs": 34.0, "protein": 12.0, "fat": 11.0},
-"Farmhouse Pizza (1 slice)": {"calories": 295.0, "carbs": 33.0, "protein": 13.0, "fat": 12.0},
-"Paneer Pizza (1 slice)": {"calories": 320.0, "carbs": 32.0, "protein": 15.0, "fat": 14.0},
-"Cheese Burst Pizza (1 slice)": {"calories": 390.0, "carbs": 34.0, "protein": 15.0, "fat": 22.0},
-"Thin Crust Veg Pizza (1 slice)": {"calories": 220.0, "carbs": 28.0, "protein": 10.0, "fat": 8.0},
-"Stuffed Crust Veg Pizza (1 slice)": {"calories": 410.0, "carbs": 36.0, "protein": 16.0, "fat": 23.0},
-
-"Veg Sandwich (2 slices)": {"calories": 240.0, "carbs": 34.0, "protein": 8.0, "fat": 8.0},
-"Grilled Veg Sandwich": {"calories": 320.0, "carbs": 35.0, "protein": 11.0, "fat": 15.0},
-"Cheese Sandwich": {"calories": 340.0, "carbs": 32.0, "protein": 13.0, "fat": 18.0},
-"Paneer Sandwich": {"calories": 360.0, "carbs": 33.0, "protein": 18.0, "fat": 17.0},
-"Corn Cheese Sandwich": {"calories": 350.0, "carbs": 36.0, "protein": 11.0, "fat": 17.0},
-"Veg Club Sandwich": {"calories": 430.0, "carbs": 42.0, "protein": 15.0, "fat": 22.0},
-
-"Veg Wrap": {"calories": 310.0, "carbs": 36.0, "protein": 10.0, "fat": 14.0},
-"Paneer Wrap": {"calories": 420.0, "carbs": 35.0, "protein": 20.0, "fat": 22.0},
-"Cheese Wrap": {"calories": 390.0, "carbs": 34.0, "protein": 15.0, "fat": 21.0},
-"Falafel Wrap": {"calories": 360.0, "carbs": 42.0, "protein": 12.0, "fat": 16.0},
-
-"French Fries (Medium)": {"calories": 365.0, "carbs": 48.0, "protein": 4.0, "fat": 17.0},
-"Peri Peri Fries": {"calories": 380.0, "carbs": 48.0, "protein": 4.0, "fat": 18.0},
-"Cheese Fries": {"calories": 480.0, "carbs": 49.0, "protein": 9.0, "fat": 28.0},
-"Potato Wedges": {"calories": 270.0, "carbs": 32.0, "protein": 4.0, "fat": 13.0},
-
-"Veg Momos (6 pcs)": {"calories": 230.0, "carbs": 38.0, "protein": 8.0, "fat": 5.0},
-"Fried Veg Momos (6 pcs)": {"calories": 340.0, "carbs": 40.0, "protein": 8.0, "fat": 15.0},
-"Paneer Momos (6 pcs)": {"calories": 310.0, "carbs": 30.0, "protein": 14.0, "fat": 15.0},
-
-"Veg Chow Mein (1 plate)": {"calories": 390.0, "carbs": 58.0, "protein": 10.0, "fat": 13.0},
-"Hakka Noodles (Veg)": {"calories": 410.0, "carbs": 60.0, "protein": 11.0, "fat": 14.0},
-"Veg Fried Rice": {"calories": 350.0, "carbs": 56.0, "protein": 8.0, "fat": 10.0},
-"Schezwan Fried Rice": {"calories": 390.0, "carbs": 58.0, "protein": 8.0, "fat": 14.0},
-
-"White Sauce Pasta": {"calories": 420.0, "carbs": 50.0, "protein": 12.0, "fat": 18.0},
-"Red Sauce Pasta": {"calories": 340.0, "carbs": 56.0, "protein": 10.0, "fat": 8.0},
-"Pink Sauce Pasta": {"calories": 390.0, "carbs": 53.0, "protein": 11.0, "fat": 15.0},
-"Mac & Cheese": {"calories": 430.0, "carbs": 46.0, "protein": 15.0, "fat": 20.0},
-
-"Veg Spring Roll (2 pcs)": {"calories": 280.0, "carbs": 30.0, "protein": 6.0, "fat": 15.0},
-"Cheese Balls (6 pcs)": {"calories": 360.0, "carbs": 24.0, "protein": 10.0, "fat": 24.0},
-"Garlic Bread (2 pcs)": {"calories": 220.0, "carbs": 28.0, "protein": 5.0, "fat": 10.0},
-"Cheesy Garlic Bread": {"calories": 320.0, "carbs": 30.0, "protein": 9.0, "fat": 18.0},
-
-"Chocolate Milkshake (300 ml)": {"calories": 360.0, "carbs": 48.0, "protein": 10.0, "fat": 14.0},
-"Vanilla Milkshake (300 ml)": {"calories": 330.0, "carbs": 46.0, "protein": 9.0, "fat": 12.0},
-"Strawberry Milkshake (300 ml)": {"calories": 310.0, "carbs": 44.0, "protein": 9.0, "fat": 10.0},
-"Banana Shake (300 ml)": {"calories": 280.0, "carbs": 42.0, "protein": 8.0, "fat": 8.0},
-"Mango Shake (300 ml)": {"calories": 320.0, "carbs": 50.0, "protein": 8.0, "fat": 8.0},
-"Oreo Shake (300 ml)": {"calories": 480.0, "carbs": 62.0, "protein": 9.0, "fat": 22.0},
-"KitKat Shake (300 ml)": {"calories": 510.0, "carbs": 65.0, "protein": 10.0, "fat": 23.0},
-"Cold Coffee (300 ml)": {"calories": 220.0, "carbs": 28.0, "protein": 6.0, "fat": 9.0},
-"Cold Coffee with Ice Cream": {"calories": 340.0, "carbs": 40.0, "protein": 8.0, "fat": 16.0},
-"Lassi Sweet (250 ml)": {"calories": 180.0, "carbs": 24.0, "protein": 6.0, "fat": 7.0},
-"Mango Lassi (250 ml)": {"calories": 240.0, "carbs": 36.0, "protein": 6.0, "fat": 8.0},
-
-"Coca Cola (330 ml)": {"calories": 139.0, "carbs": 35.0, "protein": 0.0, "fat": 0.0},
-"Pepsi (330 ml)": {"calories": 150.0, "carbs": 41.0, "protein": 0.0, "fat": 0.0},
-"Sprite (330 ml)": {"calories": 140.0, "carbs": 38.0, "protein": 0.0, "fat": 0.0},
-"Fanta Orange (330 ml)": {"calories": 160.0, "carbs": 42.0, "protein": 0.0, "fat": 0.0},
-"Limca (330 ml)": {"calories": 145.0, "carbs": 37.0, "protein": 0.0, "fat": 0.0},
-"Mountain Dew (330 ml)": {"calories": 170.0, "carbs": 46.0, "protein": 0.0, "fat": 0.0},
-"Red Bull (250 ml)": {"calories": 112.0, "carbs": 27.0, "protein": 0.0, "fat": 0.0},
-"Monster Energy (500 ml)": {"calories": 210.0, "carbs": 54.0, "protein": 0.0, "fat": 0.0},
-
-"Fresh Orange Juice (250 ml)": {"calories": 112.0, "carbs": 26.0, "protein": 1.7, "fat": 0.5},
-"Apple Juice (250 ml)": {"calories": 118.0, "carbs": 28.0, "protein": 0.2, "fat": 0.3},
-"Pineapple Juice (250 ml)": {"calories": 132.0, "carbs": 32.0, "protein": 0.9, "fat": 0.2},
-"Watermelon Juice (250 ml)": {"calories": 76.0, "carbs": 18.0, "protein": 1.2, "fat": 0.2},
-"Lemonade (250 ml)": {"calories": 95.0, "carbs": 24.0, "protein": 0.0, "fat": 0.0},
-"Coconut Water (250 ml)": {"calories": 45.0, "carbs": 9.0, "protein": 1.7, "fat": 0.2},
-
-"Vanilla Ice Cream (100 g)": {"calories": 207.0, "carbs": 24.0, "protein": 3.5, "fat": 11.0},
-"Chocolate Ice Cream (100 g)": {"calories": 216.0, "carbs": 25.0, "protein": 3.8, "fat": 12.0},
-"Butterscotch Ice Cream (100 g)": {"calories": 230.0, "carbs": 27.0, "protein": 3.5, "fat": 13.0},
-"Mango Ice Cream (100 g)": {"calories": 210.0, "carbs": 26.0, "protein": 3.2, "fat": 11.0},
-"Kulfi (100 g)": {"calories": 240.0, "carbs": 28.0, "protein": 6.0, "fat": 12.0},
-
-"Chocolate Cake (100 g)": {"calories": 370.0, "carbs": 53.0, "protein": 5.0, "fat": 16.0},
-"Black Forest Cake (100 g)": {"calories": 300.0, "carbs": 42.0, "protein": 4.0, "fat": 13.0},
-"Red Velvet Cake (100 g)": {"calories": 360.0, "carbs": 48.0, "protein": 4.0, "fat": 17.0},
-"Brownie (100 g)": {"calories": 466.0, "carbs": 59.0, "protein": 5.0, "fat": 24.0},
-"Chocolate Muffin (100 g)": {"calories": 377.0, "carbs": 53.0, "protein": 6.0, "fat": 16.0},
-"Donut (Glazed) (1)": {"calories": 270.0, "carbs": 31.0, "protein": 4.0, "fat": 15.0},
-
-"Plain Popcorn (30 g popped)": {"calories": 120.0, "carbs": 24.0, "protein": 3.0, "fat": 1.5},
-"Butter Popcorn (30 g)": {"calories": 170.0, "carbs": 21.0, "protein": 3.0, "fat": 8.0},
-"Nachos with Cheese (100 g)": {"calories": 490.0, "carbs": 54.0, "protein": 8.0, "fat": 27.0},
-"Potato Chips (100 g)": {"calories": 536.0, "carbs": 53.0, "protein": 7.0, "fat": 35.0},
-"Tortilla Chips (100 g)": {"calories": 497.0, "carbs": 63.0, "protein": 7.0, "fat": 24.0},
-
-"Chocolate Cookies (100 g)": {"calories": 488.0, "carbs": 68.0, "protein": 6.0, "fat": 22.0},
-"Digestive Biscuits (100 g)": {"calories": 483.0, "carbs": 64.0, "protein": 7.0, "fat": 20.0},
-"Cream Biscuits (100 g)": {"calories": 510.0, "carbs": 67.0, "protein": 5.0, "fat": 25.0},
-
-"Cornflakes (dry) (30 g)": {"calories": 113.0, "carbs": 26.0, "protein": 2.3, "fat": 0.3},
-"Chocolate Cereal (30 g)": {"calories": 120.0, "carbs": 24.0, "protein": 2.5, "fat": 1.5},
-"Muesli (50 g)": {"calories": 190.0, "carbs": 32.0, "protein": 6.0, "fat": 4.5},
-"Granola (50 g)": {"calories": 235.0, "carbs": 32.0, "protein": 5.0, "fat": 9.0},
-
-"Veg Hot Dog": {"calories": 360.0, "carbs": 40.0, "protein": 12.0, "fat": 16.0},
-"Paneer Hot Dog": {"calories": 420.0, "carbs": 38.0, "protein": 18.0, "fat": 21.0},
-"Veg Taco (2 pcs)": {"calories": 340.0, "carbs": 36.0, "protein": 10.0, "fat": 17.0},
-"Veg Burrito": {"calories": 520.0, "carbs": 60.0, "protein": 16.0, "fat": 22.0},
-"Paneer Burrito": {"calories": 610.0, "carbs": 58.0, "protein": 24.0, "fat": 28.0},
-"Falafel Plate": {"calories": 430.0, "carbs": 45.0, "protein": 15.0, "fat": 20.0},
-"Aloo Paratha (1 medium (120 g))": {"calories": 290.0, "carbs": 38.0, "protein": 7.0, "fat": 12.0},
-"Gobi Paratha (1 medium (120 g))": {"calories": 250.0, "carbs": 36.0, "protein": 7.0, "fat": 9.0},
-"Paneer Paratha (1 medium (140 g))": {"calories": 340.0, "carbs": 36.0, "protein": 14.0, "fat": 16.0},
-"Mooli Paratha (1 medium (120 g))": {"calories": 240.0, "carbs": 35.0, "protein": 6.0, "fat": 8.0},
-"Mix Veg Paratha (1 medium (120 g))": {"calories": 260.0, "carbs": 35.0, "protein": 7.0, "fat": 10.0},
-"Onion Paratha (1 medium (120 g))": {"calories": 255.0, "carbs": 36.0, "protein": 6.0, "fat": 9.0},
-"Methi Paratha (1 medium (120 g))": {"calories": 235.0, "carbs": 34.0, "protein": 7.0, "fat": 8.0},
-"Cheese Paratha (1 medium (140 g))": {"calories": 365.0, "carbs": 34.0, "protein": 14.0, "fat": 19.0},
-"Ajwain Paratha (1 medium (100 g))": {"calories": 245.0, "carbs": 33.0, "protein": 6.0, "fat": 9.0},
-"Lachha Paratha (1 medium (100 g))": {"calories": 300.0, "carbs": 36.0, "protein": 6.0, "fat": 15.0},
-
-"Paneer Bhurji (100 g)": {"calories": 265.0, "carbs": 5.0, "protein": 18.0, "fat": 19.0},
-"Soya Chaap (100 g)": {"calories": 190.0, "carbs": 10.0, "protein": 22.0, "fat": 7.0},
-"Malai Chaap (100 g)": {"calories": 260.0, "carbs": 11.0, "protein": 18.0, "fat": 16.0},
-"Paneer Tikka (100 g)": {"calories": 260.0, "carbs": 6.0, "protein": 18.0, "fat": 18.0},
-"Hara Bhara Kebab (4 pieces)": {"calories": 220.0, "carbs": 18.0, "protein": 8.0, "fat": 13.0},
-"Veg Cutlet (2 pieces)": {"calories": 210.0, "carbs": 24.0, "protein": 5.0, "fat": 10.0},
-"Paneer Pakora (100 g)": {"calories": 330.0, "carbs": 18.0, "protein": 14.0, "fat": 22.0},
-"Veg Manchurian (Dry) (1 plate)": {"calories": 320.0, "carbs": 32.0, "protein": 8.0, "fat": 17.0},
-"Gobi Manchurian (1 plate)": {"calories": 290.0, "carbs": 28.0, "protein": 6.0, "fat": 17.0},
-"Chilli Paneer (1 plate)": {"calories": 360.0, "carbs": 18.0, "protein": 19.0, "fat": 23.0},
-
-"Masala Chai (200 ml)": {"calories": 80.0, "carbs": 10.0, "protein": 2.5, "fat": 3.0},
-"Black Tea (200 ml)": {"calories": 2.0, "carbs": 0.0, "protein": 0.0, "fat": 0.0},
-"Green Tea (200 ml)": {"calories": 2.0, "carbs": 0.0, "protein": 0.0, "fat": 0.0},
-"Lemon Tea (200 ml)": {"calories": 20.0, "carbs": 5.0, "protein": 0.0, "fat": 0.0},
-"Black Coffee (200 ml)": {"calories": 2.0, "carbs": 0.0, "protein": 0.3, "fat": 0.0},
-"Espresso (30 ml)": {"calories": 3.0, "carbs": 0.5, "protein": 0.2, "fat": 0.0},
-"Americano (250 ml)": {"calories": 5.0, "carbs": 1.0, "protein": 0.3, "fat": 0.0},
-"Cappuccino (250 ml)": {"calories": 90.0, "carbs": 9.0, "protein": 6.0, "fat": 3.5},
-"Latte (250 ml)": {"calories": 140.0, "carbs": 13.0, "protein": 7.0, "fat": 6.0},
-"Mocha Coffee (250 ml)": {"calories": 220.0, "carbs": 28.0, "protein": 7.0, "fat": 9.0},
-"Caramel Latte (250 ml)": {"calories": 240.0, "carbs": 33.0, "protein": 7.0, "fat": 8.0},
-"Hot Chocolate (250 ml)": {"calories": 230.0, "carbs": 34.0, "protein": 8.0, "fat": 8.0},
-
-"Protein Shake (Whey) (300 ml)": {"calories": 180.0, "carbs": 8.0, "protein": 30.0, "fat": 3.0},
-"Chocolate Protein Shake (300 ml)": {"calories": 210.0, "carbs": 12.0, "protein": 30.0, "fat": 4.0},
-"Strawberry Protein Shake (300 ml)": {"calories": 200.0, "carbs": 11.0, "protein": 30.0, "fat": 3.5},
-"Vanilla Protein Shake (300 ml)": {"calories": 195.0, "carbs": 10.0, "protein": 30.0, "fat": 3.5},
-
-"Badam Milk (250 ml)": {"calories": 210.0, "carbs": 22.0, "protein": 8.0, "fat": 10.0},
-"Rose Milk (250 ml)": {"calories": 180.0, "carbs": 28.0, "protein": 6.0, "fat": 5.0},
-"Turmeric Milk (250 ml)": {"calories": 165.0, "carbs": 13.0, "protein": 8.0, "fat": 8.0},
-"Soy Milk (250 ml)": {"calories": 105.0, "carbs": 8.0, "protein": 7.0, "fat": 4.0},
-"Almond Milk (Unsweetened) (250 ml)": {"calories": 35.0, "carbs": 1.5, "protein": 1.2, "fat": 2.8},
-"Oat Milk (250 ml)": {"calories": 120.0, "carbs": 16.0, "protein": 3.0, "fat": 5.0},
-
-"Sugarcane Juice (250 ml)": {"calories": 183.0, "carbs": 45.0, "protein": 0.3, "fat": 0.0},
-"Aam Panna (250 ml)": {"calories": 120.0, "carbs": 30.0, "protein": 0.5, "fat": 0.2},
-"Jaljeera (250 ml)": {"calories": 45.0, "carbs": 10.0, "protein": 0.5, "fat": 0.1},
-"Shikanji (250 ml)": {"calories": 80.0, "carbs": 20.0, "protein": 0.2, "fat": 0.1},
-"Watermelon Smoothie (300 ml)": {"calories": 120.0, "carbs": 28.0, "protein": 2.0, "fat": 0.5},
-"Mixed Fruit Juice (250 ml)": {"calories": 135.0, "carbs": 33.0, "protein": 1.0, "fat": 0.2},
-"Guava Juice (250 ml)": {"calories": 115.0, "carbs": 26.0, "protein": 2.0, "fat": 0.3},
-"Pomegranate Juice (250 ml)": {"calories": 135.0, "carbs": 33.0, "protein": 1.0, "fat": 0.2},
-"Kiwi Smoothie (300 ml)": {"calories": 170.0, "carbs": 36.0, "protein": 5.0, "fat": 2.0},
-"Berry Smoothie (300 ml)": {"calories": 180.0, "carbs": 35.0, "protein": 6.0, "fat": 3.0},
-
-"Chocolate Smoothie (300 ml)": {"calories": 320.0, "carbs": 45.0, "protein": 10.0, "fat": 12.0},
-"Peanut Butter Shake (300 ml)": {"calories": 430.0, "carbs": 28.0, "protein": 18.0, "fat": 28.0},
-"Dry Fruit Shake (300 ml)": {"calories": 420.0, "carbs": 40.0, "protein": 14.0, "fat": 22.0},
-"Dates Shake (300 ml)": {"calories": 340.0, "carbs": 55.0, "protein": 9.0, "fat": 8.0},
-"Badam Shake (300 ml)": {"calories": 360.0, "carbs": 32.0, "protein": 13.0, "fat": 19.0},
-"Pista Shake (300 ml)": {"calories": 350.0, "carbs": 30.0, "protein": 12.0, "fat": 20.0},
-
-"Veg Thali (1 serving)": {"calories": 700.0, "carbs": 95.0, "protein": 22.0, "fat": 25.0},
-"Mini Veg Thali (1 serving)": {"calories": 520.0, "carbs": 70.0, "protein": 16.0, "fat": 18.0},
-"Dal Makhani (1 bowl)": {"calories": 280.0, "carbs": 24.0, "protein": 11.0, "fat": 16.0},
-"Shahi Paneer (1 bowl)": {"calories": 340.0, "carbs": 12.0, "protein": 13.0, "fat": 27.0},
-"Kadai Paneer (1 bowl)": {"calories": 290.0, "carbs": 10.0, "protein": 15.0, "fat": 21.0},
-"Paneer Butter Masala (1 bowl)": {"calories": 360.0, "carbs": 12.0, "protein": 14.0, "fat": 28.0},
-"Malai Kofta (1 bowl)": {"calories": 370.0, "carbs": 24.0, "protein": 9.0, "fat": 27.0},
-"Navratan Korma (1 bowl)": {"calories": 290.0, "carbs": 22.0, "protein": 7.0, "fat": 19.0},
-"Veg Kolhapuri (1 bowl)": {"calories": 210.0, "carbs": 18.0, "protein": 6.0, "fat": 13.0},
-"Chole Bhature (1 plate)": {"calories": 620.0, "carbs": 72.0, "protein": 16.0, "fat": 30.0},
-"Maggi Noodles (1 packet (70 g))": {"calories": 320.0, "carbs": 45.0, "protein": 7.0, "fat": 13.0},
-"Maggi Masala Noodles (prepared) (1 bowl)": {"calories": 350.0, "carbs": 50.0, "protein": 8.0, "fat": 14.0},
-"Maggi Vegetable Atta Noodles (1 packet)": {"calories": 310.0, "carbs": 48.0, "protein": 8.0, "fat": 10.0},
-"Yippee Noodles (1 packet)": {"calories": 335.0, "carbs": 49.0, "protein": 7.0, "fat": 13.0},
-"Top Ramen Curry Noodles (1 packet)": {"calories": 340.0, "carbs": 49.0, "protein": 7.0, "fat": 14.0},
-
-"Bikaneri Bhujia (100 g)": {"calories": 560.0, "carbs": 48.0, "protein": 15.0, "fat": 34.0},
-"Aloo Bhujia (100 g)": {"calories": 540.0, "carbs": 52.0, "protein": 10.0, "fat": 33.0},
-"Navratan Mixture (100 g)": {"calories": 545.0, "carbs": 46.0, "protein": 11.0, "fat": 36.0},
-"Bombay Mix (100 g)": {"calories": 540.0, "carbs": 48.0, "protein": 11.0, "fat": 35.0},
-"Chanachur (100 g)": {"calories": 535.0, "carbs": 46.0, "protein": 12.0, "fat": 35.0},
-"Corn Mixture (100 g)": {"calories": 510.0, "carbs": 56.0, "protein": 9.0, "fat": 27.0},
-"Salted Namkeen (100 g)": {"calories": 520.0, "carbs": 52.0, "protein": 10.0, "fat": 30.0},
-"Sev (100 g)": {"calories": 570.0, "carbs": 45.0, "protein": 14.0, "fat": 38.0},
-"Ratlami Sev (100 g)": {"calories": 565.0, "carbs": 44.0, "protein": 13.0, "fat": 39.0},
-"Masala Peanuts (100 g)": {"calories": 610.0, "carbs": 20.0, "protein": 23.0, "fat": 50.0},
-
-"Kurkure Masala Munch (100 g)": {"calories": 545.0, "carbs": 57.0, "protein": 6.0, "fat": 33.0},
-"Kurkure Green Chutney (100 g)": {"calories": 540.0, "carbs": 58.0, "protein": 6.0, "fat": 32.0},
-"Lay's Classic Chips (100 g)": {"calories": 536.0, "carbs": 53.0, "protein": 7.0, "fat": 35.0},
-"Lay's American Style Cream & Onion (100 g)": {"calories": 540.0, "carbs": 54.0, "protein": 6.0, "fat": 35.0},
-"Lay's Magic Masala (100 g)": {"calories": 540.0, "carbs": 54.0, "protein": 6.0, "fat": 35.0},
-"Bingo Mad Angles (100 g)": {"calories": 530.0, "carbs": 58.0, "protein": 6.0, "fat": 31.0},
-"Doritos Nacho Cheese (100 g)": {"calories": 500.0, "carbs": 63.0, "protein": 7.0, "fat": 25.0},
-"Pringles Original (100 g)": {"calories": 536.0, "carbs": 53.0, "protein": 5.0, "fat": 35.0},
-
-"Masala Corn Cup (1 cup)": {"calories": 180.0, "carbs": 34.0, "protein": 6.0, "fat": 2.0},
-"Cheese Corn Cup (1 cup)": {"calories": 260.0, "carbs": 30.0, "protein": 9.0, "fat": 12.0},
-"Sweet Corn Chaat (1 bowl)": {"calories": 190.0, "carbs": 36.0, "protein": 6.0, "fat": 2.0},
-
-"Veg Maggi with Cheese (1 bowl)": {"calories": 430.0, "carbs": 52.0, "protein": 13.0, "fat": 19.0},
-"Veg Maggi with Paneer (1 bowl)": {"calories": 450.0, "carbs": 50.0, "protein": 18.0, "fat": 20.0},
-"Veg Cheese Maggi (1 bowl)": {"calories": 440.0, "carbs": 51.0, "protein": 13.0, "fat": 20.0},
-
-"Bread Pakora (1 piece)": {"calories": 260.0, "carbs": 27.0, "protein": 7.0, "fat": 14.0},
-"Cheese Bread Pakora (1 piece)": {"calories": 340.0, "carbs": 28.0, "protein": 12.0, "fat": 21.0},
-"Veg Puff (1 piece)": {"calories": 310.0, "carbs": 30.0, "protein": 5.0, "fat": 19.0},
-"Paneer Puff (1 piece)": {"calories": 350.0, "carbs": 29.0, "protein": 10.0, "fat": 22.0},
-"Cheese Puff (1 piece)": {"calories": 360.0, "carbs": 28.0, "protein": 10.0, "fat": 24.0},
-
-"Veg Roll (1 roll)": {"calories": 330.0, "carbs": 40.0, "protein": 8.0, "fat": 15.0},
-"Paneer Kathi Roll (1 roll)": {"calories": 470.0, "carbs": 42.0, "protein": 19.0, "fat": 24.0},
-"Cheese Roll (1 roll)": {"calories": 420.0, "carbs": 38.0, "protein": 14.0, "fat": 22.0},
-
-"Veg Frankie (1 piece)": {"calories": 340.0, "carbs": 41.0, "protein": 9.0, "fat": 15.0},
-"Paneer Frankie (1 piece)": {"calories": 430.0, "carbs": 39.0, "protein": 18.0, "fat": 22.0},
-
-"Cheese Dosa (1 large)": {"calories": 310.0, "carbs": 34.0, "protein": 8.0, "fat": 16.0},
-"Masala Dosa (1 large)": {"calories": 387.0, "carbs": 48.0, "protein": 8.0, "fat": 18.0},
-"Mysore Masala Dosa (1 large)": {"calories": 430.0, "carbs": 50.0, "protein": 9.0, "fat": 20.0},
-"Rava Dosa (1 large)": {"calories": 260.0, "carbs": 32.0, "protein": 5.0, "fat": 11.0},
-
-"Cheese Uttapam (1 piece)": {"calories": 290.0, "carbs": 30.0, "protein": 9.0, "fat": 14.0},
-"Onion Uttapam (1 piece)": {"calories": 190.0, "carbs": 28.0, "protein": 5.0, "fat": 6.0},
-
-"Cheese Pav Bhaji (1 plate)": {"calories": 520.0, "carbs": 55.0, "protein": 12.0, "fat": 28.0},
-"Extra Butter Pav Bhaji (1 plate)": {"calories": 610.0, "carbs": 56.0, "protein": 10.0, "fat": 36.0},
-
-"Cheese Vada Pav (1 piece)": {"calories": 380.0, "carbs": 42.0, "protein": 10.0, "fat": 19.0},
-"Jumbo Vada Pav (1 piece)": {"calories": 360.0, "carbs": 48.0, "protein": 8.0, "fat": 15.0},
-
-"Cheese Dabeli (1 piece)": {"calories": 360.0, "carbs": 45.0, "protein": 9.0, "fat": 16.0},
-"Dabeli (1 piece)": {"calories": 290.0, "carbs": 42.0, "protein": 6.0, "fat": 11.0},
-
-"Veg Pizza Puff (1 piece)": {"calories": 290.0, "carbs": 28.0, "protein": 7.0, "fat": 17.0},
-"Paneer Pizza (Mini)": {"calories": 520.0, "carbs": 52.0, "protein": 20.0, "fat": 26.0},
-
-"Garlic Naan with Cheese (1 piece)": {"calories": 360.0, "carbs": 46.0, "protein": 10.0, "fat": 15.0},
-"Butter Naan (1 piece)": {"calories": 310.0, "carbs": 45.0, "protein": 8.0, "fat": 10.0},
-
-"Cheese Momos (6 pieces)": {"calories": 360.0, "carbs": 34.0, "protein": 13.0, "fat": 18.0},
-"Tandoori Momos (Veg) (6 pieces)": {"calories": 300.0, "carbs": 31.0, "protein": 10.0, "fat": 15.0},
-
-"Veg Sizzler (1 serving)": {"calories": 540.0, "carbs": 55.0, "protein": 16.0, "fat": 26.0},
-"Paneer Sizzler (1 serving)": {"calories": 620.0, "carbs": 50.0, "protein": 24.0, "fat": 35.0},
-
-"Chocolate Pastry (1 piece)": {"calories": 290.0, "carbs": 35.0, "protein": 4.0, "fat": 15.0},
-"Pineapple Pastry (1 piece)": {"calories": 260.0, "carbs": 34.0, "protein": 4.0, "fat": 12.0},
-"Black Forest Pastry (1 piece)": {"calories": 280.0, "carbs": 36.0, "protein": 4.0, "fat": 13.0},
-"Red Velvet Pastry (1 piece)": {"calories": 310.0, "carbs": 38.0, "protein": 4.0, "fat": 16.0},
-
-"Chocolate Croissant (1 piece)": {"calories": 410.0, "carbs": 45.0, "protein": 8.0, "fat": 22.0},
-"Butter Croissant (1 piece)": {"calories": 270.0, "carbs": 31.0, "protein": 5.0, "fat": 14.0},
-
-"Veg Pizza Sandwich": {"calories": 390.0, "carbs": 42.0, "protein": 14.0, "fat": 18.0},
-"Cheese Toast (2 slices)": {"calories": 320.0, "carbs": 28.0, "protein": 12.0, "fat": 18.0},
-"Garlic Toast (2 slices)": {"calories": 220.0, "carbs": 26.0, "protein": 5.0, "fat": 10.0},
-
-"Chocolate Waffle (1 piece)": {"calories": 420.0, "carbs": 52.0, "protein": 8.0, "fat": 20.0},
-"Belgian Waffle (1 piece)": {"calories": 390.0, "carbs": 48.0, "protein": 7.0, "fat": 19.0},
-"Pancakes with Maple Syrup (2 pancakes)": {"calories": 350.0, "carbs": 58.0, "protein": 8.0, "fat": 10.0},
-
-"Veg Sushi Roll (8 pieces)": {"calories": 260.0, "carbs": 48.0, "protein": 6.0, "fat": 4.0},
-"Avocado Sushi Roll (8 pieces)": {"calories": 290.0, "carbs": 44.0, "protein": 5.0, "fat": 10.0},
-"White Bread (1 slice (30 g))": {"calories": 80.0, "carbs": 15.0, "protein": 2.7, "fat": 1.0},
-"Brown Bread (1 slice (30 g))": {"calories": 74.0, "carbs": 13.0, "protein": 3.5, "fat": 1.1},
-"Whole Wheat Bread (1 slice (30 g))": {"calories": 75.0, "carbs": 13.0, "protein": 3.8, "fat": 1.0},
-"Multigrain Bread (1 slice (35 g))": {"calories": 85.0, "carbs": 15.0, "protein": 4.0, "fat": 1.4},
-"Garlic Bread (1 slice)": {"calories": 140.0, "carbs": 17.0, "protein": 3.0, "fat": 7.0},
-"Bread Toast (2 slices)": {"calories": 160.0, "carbs": 30.0, "protein": 5.4, "fat": 2.0},
-"Butter Toast (2 slices)": {"calories": 230.0, "carbs": 30.0, "protein": 5.4, "fat": 10.0},
-"Jam Toast (2 slices)": {"calories": 220.0, "carbs": 40.0, "protein": 5.0, "fat": 3.0},
-"Peanut Butter Toast (2 slices)": {"calories": 300.0, "carbs": 32.0, "protein": 11.0, "fat": 15.0},
-"Cheese Toast (2 slices)": {"calories": 290.0, "carbs": 29.0, "protein": 12.0, "fat": 14.0},
-
-"Bread Omelette (Veg Style) (2 slices)": {"calories": 250.0, "carbs": 28.0, "protein": 11.0, "fat": 10.0},
-"Bread Butter (2 slices)": {"calories": 235.0, "carbs": 30.0, "protein": 5.0, "fat": 10.0},
-"Bread Jam (2 slices)": {"calories": 220.0, "carbs": 42.0, "protein": 5.0, "fat": 2.0},
-"Bread Cheese (2 slices)": {"calories": 280.0, "carbs": 28.0, "protein": 12.0, "fat": 14.0},
-"French Toast (2 slices)": {"calories": 310.0, "carbs": 32.0, "protein": 11.0, "fat": 15.0},
-
-"Plain Bun (1 bun)": {"calories": 150.0, "carbs": 28.0, "protein": 5.0, "fat": 2.0},
-"Pav (1 piece)": {"calories": 90.0, "carbs": 18.0, "protein": 3.0, "fat": 1.0},
-"Burger Bun (1 bun)": {"calories": 120.0, "carbs": 22.0, "protein": 4.0, "fat": 2.0},
-"Hot Dog Bun (1 bun)": {"calories": 130.0, "carbs": 24.0, "protein": 4.0, "fat": 2.0},
-"Bagel (1 medium)": {"calories": 250.0, "carbs": 49.0, "protein": 10.0, "fat": 1.5},
-
-"Croissant (1 piece)": {"calories": 231.0, "carbs": 26.0, "protein": 5.0, "fat": 12.0},
-"Muffin (Plain) (1 medium)": {"calories": 265.0, "carbs": 38.0, "protein": 5.0, "fat": 10.0},
-"Rusk (2 pieces)": {"calories": 110.0, "carbs": 20.0, "protein": 3.0, "fat": 2.0},
-"Khari Biscuit (2 pieces)": {"calories": 120.0, "carbs": 12.0, "protein": 2.0, "fat": 7.0},
-"Tea Cake (1 slice)": {"calories": 180.0, "carbs": 28.0, "protein": 3.0, "fat": 7.0},
-
-"Boiled Sweet Corn (1 cup)": {"calories": 132.0, "carbs": 29.0, "protein": 5.0, "fat": 2.0},
-"Roasted Corn (1 medium)": {"calories": 110.0, "carbs": 24.0, "protein": 4.0, "fat": 1.5},
-"Butter Corn (1 cup)": {"calories": 180.0, "carbs": 28.0, "protein": 5.0, "fat": 6.0},
-"Boiled Chickpeas (100 g)": {"calories": 164.0, "carbs": 27.0, "protein": 9.0, "fat": 2.6},
-"Boiled Black Chana (100 g)": {"calories": 164.0, "carbs": 27.0, "protein": 9.0, "fat": 2.6},
-
-"Boiled Corn Chaat (1 bowl)": {"calories": 170.0, "carbs": 31.0, "protein": 6.0, "fat": 3.0},
-"Fruit Chaat (1 bowl)": {"calories": 120.0, "carbs": 30.0, "protein": 2.0, "fat": 0.5},
-"Vegetable Salad (1 bowl)": {"calories": 60.0, "carbs": 12.0, "protein": 2.5, "fat": 0.5},
-"Greek Salad (1 bowl)": {"calories": 180.0, "carbs": 10.0, "protein": 6.0, "fat": 13.0},
-"Caesar Salad (Veg) (1 bowl)": {"calories": 220.0, "carbs": 15.0, "protein": 7.0, "fat": 15.0},
-
-"Plain Rice Cakes (2 cakes)": {"calories": 70.0, "carbs": 15.0, "protein": 1.5, "fat": 0.5},
-"Rice Krispies (30 g)": {"calories": 116.0, "carbs": 26.0, "protein": 2.0, "fat": 0.4},
-"Weetabix (2 biscuits)": {"calories": 136.0, "carbs": 26.0, "protein": 4.8, "fat": 0.8},
-"Porridge (1 bowl)": {"calories": 180.0, "carbs": 30.0, "protein": 7.0, "fat": 4.0},
-"Semolina Porridge (1 bowl)": {"calories": 210.0, "carbs": 35.0, "protein": 6.0, "fat": 5.0},
-
-"Plain Pasta (cooked) (100 g)": {"calories": 157.0, "carbs": 31.0, "protein": 5.8, "fat": 0.9},
-"Macaroni (cooked) (100 g)": {"calories": 158.0, "carbs": 31.0, "protein": 5.8, "fat": 1.0},
-"Spaghetti (cooked) (100 g)": {"calories": 158.0, "carbs": 31.0, "protein": 5.8, "fat": 0.9},
-"Rice Noodles (cooked) (100 g)": {"calories": 109.0, "carbs": 25.0, "protein": 1.8, "fat": 0.2},
-"Whole Wheat Pasta (100 g cooked)": {"calories": 149.0, "carbs": 30.0, "protein": 6.0, "fat": 0.9},
-
-"Plain Yogurt (100 g)": {"calories": 61.0, "carbs": 4.7, "protein": 3.5, "fat": 3.3},
-"Low Fat Yogurt (100 g)": {"calories": 43.0, "carbs": 4.7, "protein": 4.0, "fat": 1.0},
-"Flavored Yogurt (100 g)": {"calories": 95.0, "carbs": 14.0, "protein": 3.5, "fat": 2.0},
-"Vanilla Yogurt (100 g)": {"calories": 97.0, "carbs": 15.0, "protein": 3.4, "fat": 2.0},
-"Frozen Yogurt (100 g)": {"calories": 127.0, "carbs": 22.0, "protein": 3.5, "fat": 3.0},
-
-"Cream Cheese (30 g)": {"calories": 102.0, "carbs": 1.6, "protein": 2.0, "fat": 10.0},
-"Cottage Cheese (100 g)": {"calories": 98.0, "carbs": 3.4, "protein": 11.0, "fat": 4.3},
-"Processed Cheese Slice (1 slice)": {"calories": 65.0, "carbs": 1.0, "protein": 4.0, "fat": 5.0},
-"Cheese Cube (20 g)": {"calories": 80.0, "carbs": 0.5, "protein": 5.0, "fat": 6.5},
-"Cheese Spread (20 g)": {"calories": 70.0, "carbs": 1.0, "protein": 2.0, "fat": 6.0},
-
-"Boiled Potato (1 medium)": {"calories": 161.0, "carbs": 37.0, "protein": 4.0, "fat": 0.2},
-"Mashed Potato (100 g)": {"calories": 110.0, "carbs": 17.0, "protein": 2.0, "fat": 4.0},
-"Baked Potato (1 medium)": {"calories": 161.0, "carbs": 37.0, "protein": 4.0, "fat": 0.2},
-"Sweet Potato Fries (100 g)": {"calories": 250.0, "carbs": 33.0, "protein": 2.5, "fat": 11.0},
-"Hash Browns (100 g)": {"calories": 326.0, "carbs": 37.0, "protein": 3.0, "fat": 18.0},
-
-"Boiled Pasta with Butter (1 bowl)": {"calories": 280.0, "carbs": 38.0, "protein": 7.0, "fat": 11.0},
-"Vegetable Soup (1 bowl)": {"calories": 90.0, "carbs": 15.0, "protein": 3.0, "fat": 2.0},
-"Tomato Soup (1 bowl)": {"calories": 80.0, "carbs": 14.0, "protein": 2.0, "fat": 2.0},
-"Sweet Corn Soup (1 bowl)": {"calories": 140.0, "carbs": 25.0, "protein": 4.0, "fat": 2.0},
-"Hot & Sour Soup (Veg) (1 bowl)": {"calories": 95.0, "carbs": 15.0, "protein": 3.0, "fat": 2.0},
-    
 }
 INSULIN_TYPES = [
     "No Insulin",
@@ -1131,12 +681,30 @@ def glucose_prediction_model(
     weight_kg = weight_kg if weight_kg and weight_kg > 0 else 70.0
 
     # ── 1. Carb excursion ────────────────────────────────────────────────────
+    # These relative multipliers are calibrated against published CGM studies
+    # of typical postprandial glucose RISE (peak minus baseline), not invented
+    # arbitrarily. Approximate cited rises:
+    #   - No Diabetes:      ~35-45 mg/dL rise (peaks ~120-132 mg/dL from a
+    #     baseline around 90-99 mg/dL; Freckmann et al. 2007, Shah et al. 2019)
+    #   - Type 2 Diabetes:  ~83-109 mg/dL rise in drug-naive patients, higher
+    #     in poorer control (a 24h CGM study of drug-naive T2DM patients)
+    #   - Type 1 Diabetes:  commonly >69 mg/dL at 1hr and >99 mg/dL at 2hr in
+    #     clinical postprandial-elevation thresholds — similar magnitude to
+    #     Type 2, not dramatically higher, reflecting the complete absence of
+    #     endogenous insulin rather than a multiplicatively worse response
+    #   - Prediabetes:      no clean rise-magnitude figure in the literature;
+    #     positioned between No Diabetes and Type 2 based on qualitative CGM
+    #     evidence that glucose excursions into the "diabetic range" occur in
+    #     ~36% of prediabetic CGM users vs ~15% of healthy CGM users
+    # Still a simplification — these studies differ in meal size, population,
+    # and methodology, so treat this as an evidence-informed approximation,
+    # not a precise coefficient.
     carb_factor = {
-        "No Diabetes":     1.1,
-        "Prediabetes":     1.6,
-        "Type 2 Diabetes": 2.2,
-        "Type 1 Diabetes": 3.0,
-    }.get(diabetes_type, 1.6)
+        "No Diabetes":     1.0,
+        "Prediabetes":     1.4,
+        "Type 2 Diabetes": 2.1,
+        "Type 1 Diabetes": 2.3,
+    }.get(diabetes_type, 1.4)
 
     carb_peak_rise = carbs_g * carb_factor
     carb_profile   = CARB_RESPONSE_PROFILE.get(diabetes_type, CARB_RESPONSE_PROFILE["Prediabetes"])
@@ -1813,118 +1381,108 @@ def three_month_trend_chart(dates, values) -> go.Figure:
 
 # ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
 
-# ─── PREMIUM FEATURES ───────────────────────────────────────────────────────────
+def generate_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> tuple[str | None, str | None]:
+    """
+    Ask Gemini for a strictly vegetarian diet plan tailored to the patient's
+    diabetes status, BMI category, and risk level.
 
-def get_gemini_veg_diet_plan(diabetes_type: str, bmi_cat: str, risk: str) -> str:
-    """Generate a strict vegetarian diet plan using Gemini."""
-    api_key = os.getenv("GEMINI_API_KEY") or os.getenv("GOOGLE_API_KEY")
-    if not api_key or not GEMINI_SDK_AVAILABLE:
-        return ""
+    Returns (plan_text, error_message) — exactly one is None, matching the
+    same pattern as generate_ai_recommendations() so failures fall back
+    cleanly to the rule-based plan below instead of crashing or silently
+    showing nothing.
+    """
+    if not GEMINI_SDK_AVAILABLE:
+        return None, "The google-genai package isn't installed."
 
-    try:
-        client = _genai.Client(api_key=api_key)
+    api_key = _get_gemini_api_key()
+    if not api_key:
+        return None, "No Gemini API key configured (set GEMINI_API_KEY in Streamlit secrets)."
 
-        system_instruction = (
-            "You are a strict vegetarian diet assistant for an educational diabetes app. "
-            "Return only vegetarian food ideas. Do not include egg, chicken, fish, meat, or alcohol. "
-            "Keep the advice practical, India-friendly, and concise. "
-            "This is for educational use only and not medical advice."
-        )
+    prompt = f"""You are a strict vegetarian diet assistant for GlucoVision AI, an educational
+diabetes prototype — not a medical device. Never include egg, chicken, fish, meat, or alcohol
+in any suggestion. Keep suggestions practical and easy to find in India.
 
-        user_prompt = f"""
-Create a vegetarian AI diet recommendation plan for a person with:
+Patient snapshot:
 - Diabetes status: {diabetes_type}
 - BMI category: {bmi_cat}
 - Risk level: {risk}
 
-Rules:
-- Strictly vegetarian only
-- No egg, no meat, no fish
-- Keep food common and easy to find in India
-- Include breakfast, lunch, dinner, and 2 snacks
-- For each meal, give 2-3 options
-- Add portion guidance
-- Keep it readable and practical
-- Prefer low sugar, high fibre, balanced protein, and controlled carbs
-- Mention foods to limit or avoid
-- End with a short note that it is educational only
-"""
+Write a vegetarian diet plan with breakfast, lunch, dinner, and 2 snacks. For each meal give
+2-3 options with brief portion guidance. Prefer low sugar, high fibre, balanced protein, and
+controlled carbs appropriate for the risk level above. Mention a couple of foods to limit.
+End with one line noting this is educational only, not a clinical prescription.
 
-        interaction = client.interactions.create(
-            model=GEMINI_MODEL,
-            system_instruction=system_instruction,
-            input=user_prompt,
-            generation_config={
-                "temperature": 0.6,
-            },
-        )
+Keep the whole response concise — plain text or simple markdown, no long preamble."""
 
-        return interaction.output_text.strip()
+    try:
+        client = _genai.Client(api_key=api_key)
+        try:
+            response = client.models.generate_content(model=GEMINI_MODEL, contents=prompt)
+        except Exception as first_err:
+            if "404" in str(first_err) or "NOT_FOUND" in str(first_err):
+                response = client.models.generate_content(model=GEMINI_MODEL_FALLBACK, contents=prompt)
+            else:
+                raise
+
+        text = (response.text or "").strip()
+        if not text:
+            return None, "Gemini returned an empty response."
+        return text, None
 
     except Exception as e:
-        return f"ERROR: {e}"
+        return None, f"Gemini request failed: {e}"
 
 
 def render_diet_plan(diabetes_type: str, bmi_cat: str, risk: str):
-    """Gemini-powered vegetarian diet plan with fallback."""
+    """Gemini-powered vegetarian diet plan, with a rule-based vegetarian
+    fallback (built from FOOD_DB) if Gemini is unavailable or errors out."""
     st.markdown("#### 🥗 Personalised AI Diet Plan")
-    st.caption("Generated using Gemini API and restricted to vegetarian foods only.")
+    st.caption("Generated using Gemini, restricted to vegetarian foods only — falls back to a rule-based vegetarian plan if Gemini is unavailable.")
 
-    plan_text = get_gemini_veg_diet_plan(diabetes_type, bmi_cat, risk)
+    plan_text, plan_error = generate_gemini_veg_diet_plan(diabetes_type, bmi_cat, risk)
 
-    if plan_text and not plan_text.startswith("ERROR:"):
+    if plan_text:
         st.success("✅ Gemini-generated vegetarian plan ready")
         st.markdown(plan_text)
+        st.info("💡 Educational suggestion only, not a clinical diet prescription. Consult a registered dietitian for a medically supervised plan.")
+        return
+
+    st.warning(f"⚠️ Couldn't reach Gemini ({plan_error}) — showing the built-in rule-based vegetarian plan instead.")
+
+    NON_VEG_KEYWORDS = ("chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey", "crab", "shrimp", "sardines")
+
+    if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
+        plan_label = "Low-Carb Vegetarian Plan"
+        pool = [k for k, v in FOOD_DB.items() if v["carbs"] <= 15 and not any(x in k.lower() for x in NON_VEG_KEYWORDS)]
+    elif risk == "Medium Risk" or bmi_cat in ("Overweight", "Obese"):
+        plan_label = "Moderate-Carb Vegetarian Plan"
+        pool = [k for k, v in FOOD_DB.items() if 8 <= v["carbs"] <= 25 and not any(x in k.lower() for x in NON_VEG_KEYWORDS)]
     else:
-        st.warning("Gemini API is not available, so showing the fallback vegetarian plan.")
+        plan_label = "Balanced Vegetarian Plan"
+        pool = [k for k in FOOD_DB.keys() if not any(x in k.lower() for x in NON_VEG_KEYWORDS)]
 
-        # Vegetarian fallback
-        if risk == "High Risk" or diabetes_type in ("Type 1 Diabetes", "Type 2 Diabetes"):
-            plan_label = "Low-Carb Vegetarian Plan"
-            pool = [
-                k for k, v in FOOD_DB.items()
-                if v["carbs"] <= 15 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
-            ]
-        elif risk == "Medium Risk" or bmi_cat in ("Overweight", "Obese"):
-            plan_label = "Moderate-Carb Vegetarian Plan"
-            pool = [
-                k for k, v in FOOD_DB.items()
-                if 8 <= v["carbs"] <= 25 and all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
-            ]
-        else:
-            plan_label = "Balanced Vegetarian Plan"
-            pool = [
-                k for k in FOOD_DB.keys()
-                if all(x not in k.lower() for x in ["chicken", "fish", "mutton", "egg", "prawn", "tuna", "salmon", "duck", "turkey"])
-            ]
+    if not pool:
+        pool = [k for k in FOOD_DB.keys() if not any(x in k.lower() for x in NON_VEG_KEYWORDS)] or list(FOOD_DB.keys())
 
-        if not pool:
-            pool = list(FOOD_DB.keys())
+    seed = abs(hash(st.session_state.get("user_key", "guest"))) % (2**32)
+    rng = np.random.default_rng(seed=seed)
+    meal_slots = {
+        "🌅 Breakfast": 2,
+        "🍛 Lunch": 2,
+        "🌙 Dinner": 2,
+        "🍎 Snack": 1,
+    }
+    st.markdown(f"**Plan Type:** {plan_label} &nbsp;|&nbsp; **Based on:** {diabetes_type}, {bmi_cat} BMI, {risk}")
+    for meal, n in meal_slots.items():
+        n = min(n, len(pool))
+        items = rng.choice(pool, size=n, replace=False)
+        st.markdown(f"**{meal}**")
+        for it in items:
+            info = FOOD_DB[it]
+            st.markdown(f"- {it} — {info['calories']:.0f} kcal, {info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein")
 
-        seed = abs(hash(st.session_state.get("user_key", "guest"))) % (2**32)
-        rng = np.random.default_rng(seed=seed)
+    st.info("💡 Vegetarian fallback plan shown because Gemini was unavailable. This is educational only, not a clinical diet prescription.")
 
-        meal_slots = {
-            "🌅 Breakfast": 2,
-            "🍛 Lunch": 2,
-            "🌙 Dinner": 2,
-            "🍎 Snack": 1,
-        }
-
-        st.markdown(f"**Plan Type:** {plan_label} &nbsp;|&nbsp; **Based on:** {diabetes_type}, {bmi_cat} BMI, {risk}")
-
-        for meal, n in meal_slots.items():
-            n = min(n, len(pool))
-            items = rng.choice(pool, size=n, replace=False)
-            st.markdown(f"**{meal}**")
-            for it in items:
-                info = FOOD_DB[it]
-                st.markdown(
-                    f"- {it} — {info['calories']:.0f} kcal, "
-                    f"{info['carbs']:.0f}g carbs, {info['protein']:.0f}g protein"
-                )
-
-        st.info("💡 Vegetarian fallback plan shown because Gemini was unavailable. It is educational only.")
 
 def render_mbti_calculator():
     """Simple 4-question MBTI-style personality self-assessment."""
@@ -2104,7 +1662,7 @@ def main():
     """, unsafe_allow_html=True)
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 1 • PATIENT PROFILE
+    # SECTION 1 · PATIENT PROFILE
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-blue">
@@ -2229,7 +1787,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 2 • INSULIN MANAGEMENT
+    # SECTION 2 · INSULIN MANAGEMENT
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-red">
@@ -2267,7 +1825,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 3 • FOOD INTELLIGENCE SYSTEM
+    # SECTION 3 · FOOD INTELLIGENCE SYSTEM
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-orange">
@@ -2322,7 +1880,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 4 • METABOLIC DIGITAL TWIN
+    # SECTION 4 · METABOLIC DIGITAL TWIN
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-teal">
@@ -2399,7 +1957,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 5 • AI GLUCOSE PREDICTION TABLE
+    # SECTION 5 · AI GLUCOSE PREDICTION TABLE
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-green">
@@ -2430,7 +1988,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 6 • ADVANCED VISUALIZATIONS
+    # SECTION 6 · ADVANCED VISUALIZATIONS
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-purple">
@@ -2455,7 +2013,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 7 • AI HEALTH ANALYTICS
+    # SECTION 7 · AI HEALTH ANALYTICS
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-pink">
@@ -2481,7 +2039,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 8 • AI RECOMMENDATIONS
+    # SECTION 8 · AI RECOMMENDATIONS
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-yellow">
@@ -2531,7 +2089,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 9 • FUTURE HEALTH INSIGHT
+    # SECTION 9 · FUTURE HEALTH INSIGHT
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-purple">
@@ -2573,7 +2131,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 10 • EXPORT REPORT (PDF)
+    # SECTION 10 · EXPORT REPORT (PDF)
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-blue">
@@ -2628,7 +2186,7 @@ def main():
     st.markdown("---")
 
     # ════════════════════════════════════════════════════════════════════════════
-    # SECTION 11 • PREMIUM AI WELLNESS SUITE
+    # SECTION 11 · PREMIUM AI WELLNESS SUITE
     # ════════════════════════════════════════════════════════════════════════════
     st.markdown("""
     <div class="section-header sh-green">
@@ -2684,7 +2242,7 @@ def main():
             for any medical concerns.
         </div>
         <div style="font-size:0.72rem; color:#334155; margin-top:1rem">
-            GlucoVision AI v1.0 • Science Fair Edition • Built with Streamlit + Plotly + ReportLab
+            GlucoVision AI v1.0 · Science Fair Edition · Built with Streamlit + Plotly + ReportLab
         </div>
     </div>
     """, unsafe_allow_html=True)
